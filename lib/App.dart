@@ -15,7 +15,7 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   var _lessons;
   DateTime now;
-  String selected = "Week";
+  String selected = "Day";
   String _firstDay;
   String _lastDay;
   List<Widget> _lessonsWidget = [];
@@ -26,7 +26,7 @@ class AppState extends State<App> {
     super.initState();
     this.now = new DateTime.now();
     updateTimetable().then((_) {
-      generateWeekView();
+      generateDayView();
     });
   }
 
