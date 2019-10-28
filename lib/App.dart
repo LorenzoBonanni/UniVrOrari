@@ -42,68 +42,68 @@ class AppState extends State<App> {
 
   // generate card widget based on parameters
   generateCard(lezione, docente, aula, inizio, fine) {
-    return new Card(
-      child: new Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 3.0),
-            child: new Row(
-              children: <Widget>[
-                new Text("Lezione: ",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                new SizedBox(
-                  child: new Text(lezione),
-                  width: 300.0,
-                )
-              ],
+    if (
+      lezione == null ||
+      docente == null ||
+      aula == null ||
+      inizio == null ||
+      fine == null
+    ) {
+      return new Text("\nVacanza");
+    } else {
+      return new Card(
+        child: new Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 3.0),
+              child: new Row(
+                children: <Widget>[
+                  new Text("Lezione: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  new SizedBox(
+                    child: new Text(lezione),
+                    width: 300.0,
+                  )
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 3.0),
-            child: new Row(
-              children: <Widget>[
-                new Text("Docente: ",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                new Text(docente)
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 3.0),
+              child: new Row(
+                children: <Widget>[
+                  new Text("Docente: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  new Text(docente)
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 3.0),
-            child: new Row(
-              children: <Widget>[
-                new Text("Aula: ",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                new SizedBox(
-                  child: new Text(aula),
-                  width: 300.0,
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 3.0),
+              child: new Row(
+                children: <Widget>[
+                  new Text("Aula: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  new SizedBox(
+                    child: new Text(aula),
+                    width: 300.0,
+                  )
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 3.0),
-            child: new Row(
-              children: <Widget>[
-                new Text("Inizio: ",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                new Text(inizio)
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 3.0),
+              child: new Row(
+                children: <Widget>[
+                  new Text("Orario: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  new Text(inizio + " - " + fine)
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 3.0),
-            child: new Row(
-              children: <Widget>[
-                new Text("Fine: ",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                new Text(fine)
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 
   // generate widgets to be viewed fow week view
@@ -182,7 +182,9 @@ class AppState extends State<App> {
     setState(() {
       this._lessonsWidget.add(
             new Text(
-              this._nomeGiorni[dayDifference] + " " + new DateFormat("dd-MM-yyyy").format(this.now),
+              this._nomeGiorni[dayDifference] +
+                  " " +
+                  new DateFormat("dd-MM-yyyy").format(this.now),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           );
@@ -205,34 +207,36 @@ class AppState extends State<App> {
 
     setState(() {
       this._lessonsWidget.add(new ButtonBar(
-        alignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          FlatButton(
-            child: const Text('PREV DAY'),
-            onPressed: () {
-              do {
-                this.now = this.now.subtract(new Duration(days: 1));
-              } while(DateFormat('EEEE').format(this.now) == "Sunday" || DateFormat('EEEE').format(this.now) == "Saturday");
+            alignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              FlatButton(
+                child: const Text('PREV DAY'),
+                onPressed: () {
+                  do {
+                    this.now = this.now.subtract(new Duration(days: 1));
+                  } while (DateFormat('EEEE').format(this.now) == "Sunday" ||
+                      DateFormat('EEEE').format(this.now) == "Saturday");
 
-              this.updateTimetable().then((_) {
-                this.generateDayView();
-              });
-            },
-          ),
-          FlatButton(
-            child: const Text('NEXT DAY'),
-            onPressed: () {
-              do {
-                this.now = this.now.add(new Duration(days: 1));
-              } while(DateFormat('EEEE').format(this.now) == "Sunday" || DateFormat('EEEE').format(this.now) == "Saturday");
+                  this.updateTimetable().then((_) {
+                    this.generateDayView();
+                  });
+                },
+              ),
+              FlatButton(
+                child: const Text('NEXT DAY'),
+                onPressed: () {
+                  do {
+                    this.now = this.now.add(new Duration(days: 1));
+                  } while (DateFormat('EEEE').format(this.now) == "Sunday" ||
+                      DateFormat('EEEE').format(this.now) == "Saturday");
 
-              this.updateTimetable().then((_) {
-                this.generateDayView();
-              });
-            },
-          ),
-        ],
-      ));
+                  this.updateTimetable().then((_) {
+                    this.generateDayView();
+                  });
+                },
+              ),
+            ],
+          ));
     });
   }
 
