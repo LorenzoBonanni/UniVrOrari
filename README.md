@@ -4,9 +4,9 @@ A flutter application to see lesson schedule
 ![AppLogo](assets/icon/icon.png)
 
 ## Screenshots
-![WeekView](screenshots/week.jpg)
+![WeekView](screenshots/week.png)
 ------
-![WeekView](screenshots/day.jpg)
+![WeekView](screenshots/day.png)
 ------
-![WeekView](screenshots/settings.jpg)
+![WeekView](screenshots/settings.png)
 
