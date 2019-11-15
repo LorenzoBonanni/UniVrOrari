@@ -99,7 +99,7 @@ class MainScreenState extends State<MainScreen>
   prevDay() {
     // if weekend skip to friday
     do {
-      _now = _now.add(new Duration(days: 1));
+      _now = _now.subtract(new Duration(days: 1));
     } while (DateFormat('EEEE').format(_now) == "Sunday" ||
         DateFormat('EEEE').format(_now) == "Saturday");
 
