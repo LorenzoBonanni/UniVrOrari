@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:school_timetable/screens/SettingScreen.dart';
 import 'package:school_timetable/tabs/WeekView.dart';
 import 'package:school_timetable/tabs/DayView.dart';
-import 'package:school_timetable/screens/SettingsScreen.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
 import 'package:school_timetable/utils/FadeRoute.dart';
-import 'package:school_timetable/utils/SettingUtils.dart';
+import 'package:school_timetable/widgets/Loading.dart';
 
 class MainScreen extends StatefulWidget {
   var _now;
   bool _changeTab = false;
 
-  MainScreen([now, changeTab]) {
-    if (now != null) {
-      _now = now;
-    }
-    if (changeTab != null) {
-      _changeTab = changeTab;
-    }
-  }
+  MainScreen([this._now, this._changeTab]);
 
   @override
   State<StatefulWidget> createState() {
@@ -58,6 +51,11 @@ class MainScreenState extends State<MainScreen>
     if (_now == null) {
       _now = new DateTime.now();
     }
+
+    while (DateFormat('EEEE').format(_now) == "Sunday" ||
+        DateFormat('EEEE').format(_now) == "Saturday")
+      _now = _now.add(new Duration(days: 1));
+
     MainScreenState.updateTimetable().then((_) {
       setState(() {
         _dayWidget = new DayView(_firstDay, _lessons, _now);
@@ -94,6 +92,7 @@ class MainScreenState extends State<MainScreen>
         _dayWidget = new DayView(_firstDay, _lessons, _now);
       });
     });
+    changePage(false);
   }
 
   prevDay() {
@@ -108,16 +107,17 @@ class MainScreenState extends State<MainScreen>
         _dayWidget = new DayView(_firstDay, _lessons, _now);
       });
     });
+    changePage(false);
   }
 
-  nextWeek() async {
+  nextWeek() {
     _now = _now.add(new Duration(days: 7));
     updateTimetable().then((_) {
       setState(() {
         _weekWidget = new WeekView(_firstDay, _lastDay, _lessons);
       });
     });
-    return "";
+    changePage(true);
   }
 
   prevWeek() async {
@@ -127,7 +127,7 @@ class MainScreenState extends State<MainScreen>
         _weekWidget = new WeekView(_firstDay, _lastDay, _lessons);
       });
     });
-    return "";
+    changePage(true);
   }
 
   static getDayTitle() {
@@ -144,11 +144,7 @@ class MainScreenState extends State<MainScreen>
     // day title
     if (dayDifference <= 4 && dayDifference >= 0) {
       return new Text(
-        nomeGiorni[dayDifference] +
-            " " +
-            new DateFormat("dd-MM-yyyy").format(_now),
-        style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+        nomeGiorni[dayDifference] + " " + new DateFormat("dd-MM-yyyy").format(_now),
       );
     } else {
       return new Text("");
@@ -158,11 +154,6 @@ class MainScreenState extends State<MainScreen>
   static getWeekTitle() {
     return new Text(
       _firstDay + " - " + _lastDay,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 20,
-        color: Colors.white,
-      ),
     );
   }
 
@@ -171,20 +162,19 @@ class MainScreenState extends State<MainScreen>
       alignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         FlatButton(
-          child:
-              new Text('PREV DAY', style: new TextStyle(color: Colors.green)),
+          child: new Text('PREV DAY'),
           onPressed: () {
             prevDay();
-            changePage(false);
           },
+          textColor: Theme.of(context).buttonColor,
         ),
         FlatButton(
-          child:
-              new Text('NEXT DAY', style: new TextStyle(color: Colors.green)),
+          child: new Text('NEXT DAY'),
           onPressed: () {
             this.nextDay();
             changePage(false);
           },
+          textColor: Theme.of(context).buttonColor,
         ),
       ],
     );
@@ -197,38 +187,18 @@ class MainScreenState extends State<MainScreen>
         FlatButton(
           child: new Text(
             'PREV WEEK',
-            style: new TextStyle(color: Colors.green),
           ),
           onPressed: () {
-            prevWeek().then((_) {
-              changePage(true);
-            });
+            prevWeek();
           },
         ),
         FlatButton(
           child: new Text(
             'NEXT WEEK',
-            style: new TextStyle(color: Colors.green),
           ),
           onPressed: () {
-            nextWeek().then((_) {
-              changePage(true);
-            });
+            nextWeek();
           },
-        ),
-      ],
-    );
-  }
-
-  update() {
-    return new Stack(
-      children: [
-        new Opacity(
-          opacity: 0.3,
-          child: const ModalBarrier(dismissible: false, color: Colors.grey),
-        ),
-        new Center(
-          child: new CircularProgressIndicator(),
         ),
       ],
     );
@@ -273,7 +243,6 @@ class MainScreenState extends State<MainScreen>
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             new SliverAppBar(
-              backgroundColor: Colors.green,
               automaticallyImplyLeading: false,
               centerTitle: true,
               title: _firstDay != null ? _tabsTitle : new Text(""),
@@ -293,13 +262,10 @@ class MainScreenState extends State<MainScreen>
               actions: <Widget>[
                 IconButton(
                   icon: new Icon(Icons.settings),
-                  onPressed: () {
-                    SettingUtils.setSetted(false);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsScreen()),
-                    );
-                  },
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsScreen()),
+                  ),
                 ),
               ],
             )
@@ -315,7 +281,7 @@ class MainScreenState extends State<MainScreen>
                       getDayButtons(),
                     ]),
                   )
-                : update(),
+                : Loading(),
             _weekWidget != null
                 ? new SingleChildScrollView(
                     child: new Column(children: <Widget>[
@@ -323,7 +289,7 @@ class MainScreenState extends State<MainScreen>
                       getWeekButtons(),
                     ]),
                   )
-                : update(),
+                : Loading(),
           ],
           controller: _tabController,
         ),
@@ -331,4 +297,10 @@ class MainScreenState extends State<MainScreen>
     );
   }
 }
+
 // TODO: dark mode
+// TODO: swipe right -> next day/week
+// TODO: swipe left -> prev day/week
+// TODO: lezioni passate in grigio
+// TODO: aule libere
+// TODO: filtro lezioni

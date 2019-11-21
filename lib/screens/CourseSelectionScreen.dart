@@ -3,14 +3,14 @@ import 'package:school_timetable/screens/MainScreen.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 
-class SettingsScreen extends StatefulWidget {
+class CourseSelectionScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new SettingsScreenState();
+    return new CourseSelectionScreenState();
   }
 }
 
-class SettingsScreenState extends State<SettingsScreen> {
+class CourseSelectionScreenState extends State<CourseSelectionScreen> {
   String hint = "select value";
   String disabledHint = "disabled";
   String _selectedYear = "";
@@ -51,7 +51,13 @@ class SettingsScreenState extends State<SettingsScreen> {
           setState(() {
             this._yearsItems.add(
                   new DropdownMenuItem<String>(
-                      value: year[1], child: new Text(year[0])),
+                    value: year[1],
+                    child: new Text(
+                      year[0],
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.display1.color),
+                    ),
+                  ),
                 );
           })
         });
@@ -71,7 +77,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                       width: 300.0,
                       child: new Text(
                         course[0],
-                        style: new TextStyle(fontSize: 10),
+                        style: new TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context).textTheme.display1.color),
                       ),
                     ),
                   ),
@@ -95,7 +103,12 @@ class SettingsScreenState extends State<SettingsScreen> {
                               value: year2["valore"],
                               child: new Text(
                                 year2["label"],
-                                style: new TextStyle(fontSize: 10),
+                                style: new TextStyle(
+                                    fontSize: 10,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .display1
+                                        .color),
                               ),
                             ),
                           ),
@@ -142,7 +155,8 @@ class SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-          title: new Text("Settings"), automaticallyImplyLeading: false,
+        title: new Text("Course Selection"),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.green,
       ),
       body: Center(
@@ -159,129 +173,141 @@ class SettingsScreenState extends State<SettingsScreen> {
 
   Column buildColumn3() {
     return Column(
+      children: <Widget>[
+        Center(
+          child: Row(
             children: <Widget>[
-              Center(
+              Expanded(
                 child: Row(
                   children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        "Anno di Studio: ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                    Text(
+                      "Anno di Studio: ",
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.display1.color),
                     ),
-                    Text(this._selectedYear2)
+                    Text(this._selectedYear2, style: TextStyle(color: Theme.of(context).textTheme.display1.color),)
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new DropdownButton<String>(
-                  items: this._year2Items,
-                  hint: new Text(
-                    hint,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  disabledHint: new Text(
-                    disabledHint,
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    SettingUtils.setData("anno2", value);
-                    this.getTxtCurr(value);
-                  },
-                ),
-              ),
             ],
-          );
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: new DropdownButton<String>(
+            items: this._year2Items,
+            hint: new Text(
+              hint,
+              style: TextStyle(
+                color: Theme.of(context).textTheme.display1.color,
+              ),
+            ),
+            disabledHint: new Text(
+              disabledHint,
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+            onChanged: (value) {
+              SettingUtils.setData("anno2", value);
+              this.getTxtCurr(value);
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Column buildColumn2() {
     return Column(
+      children: <Widget>[
+        Center(
+          child: Row(
             children: <Widget>[
-              Center(
+              Expanded(
                 child: Row(
                   children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        "Nome Corso: ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                    Text(
+                      "Nome Corso: ",
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.display1.color),
                     ),
-                    Text(this._selectedCourse)
+                    Text(this._selectedCourse, style: TextStyle(color: Theme.of(context).textTheme.display1.color),)
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new DropdownButton<String>(
-                  items: this._coursesItems,
-                  hint: new Text(
-                    hint,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  disabledHint: new Text(
-                    disabledHint,
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    getCourseLabel(value);
-                    SettingUtils.setData("corso", value);
-                    createYear2Items(value);
-                  },
-                ),
-              ),
             ],
-          );
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: new DropdownButton<String>(
+            items: this._coursesItems,
+            hint: new Text(
+              hint,
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            disabledHint: new Text(
+              disabledHint,
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+            onChanged: (value) {
+              getCourseLabel(value);
+              SettingUtils.setData("corso", value);
+              createYear2Items(value);
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Column buildColumn() {
     return Column(
+      children: <Widget>[
+        Center(
+          child: Row(
             children: <Widget>[
-              Center(
+              Expanded(
                 child: Row(
                   children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        "Anno Accademico: ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                    Text(
+                      "Anno Accademico: ",
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.display1.color),
                     ),
-                    Text(this._selectedYear)
+                    Text(this._selectedYear, style: TextStyle(color: Theme.of(context).textTheme.display1.color),)
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new DropdownButton<String>(
-                  items: this._yearsItems,
-                  hint: new Text(
-                    hint,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  disabledHint: new Text(
-                    disabledHint,
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    this.getYearLabel(value);
-                    SettingUtils.setData("anno", value);
-                    this.createCoursesItems(value);
-                  },
-                ),
-              ),
             ],
-          );
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: new DropdownButton<String>(
+            items: this._yearsItems,
+            hint: new Text(
+              hint,
+              style: TextStyle(
+                color: Theme.of(context).textTheme.display1.color,
+              ),
+            ),
+            disabledHint: new Text(
+              disabledHint,
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+            onChanged: (value) {
+              this.getYearLabel(value);
+              SettingUtils.setData("anno", value);
+              this.createCoursesItems(value);
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

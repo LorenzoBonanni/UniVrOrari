@@ -11,6 +11,18 @@ class LessonCard extends StatelessWidget {
   bool _vacanza = false;
   var _lessonColor;
 
+  // bordeaux
+  final _lightDispari = Color.fromRGBO(129, 0, 44, 100);
+
+  // ottanio
+  final _lightPari = Color.fromRGBO(2, 142, 185, 100);
+
+  // bigBubble
+  final _darkDispari = Color(0xff66ff);
+
+  // ottanio
+  final _darkPari = Color.fromRGBO(2, 142, 185, 100);
+
   LessonCard(lezione, docente, aula, inizio, fine) {
     this._lezione = lezione;
     this._docente = docente;
@@ -18,28 +30,22 @@ class LessonCard extends StatelessWidget {
     this._inizio = inizio;
     this._fine = fine;
 
-
-    if (
-        lezione == null ||
+    if (lezione == null ||
         docente == null ||
         aula == null ||
         inizio == null ||
-        fine == null
-    ) {
+        fine == null) {
       this._vacanza = true;
-    }
-
-    if(!_vacanza && lezione.contains("dispari")) {
-      // bordeaux
-      this._lessonColor = Color.fromRGBO(129, 0, 44, 100);
-    } else {
-      // ottanio
-      this._lessonColor = Color.fromRGBO(2, 142, 185, 100);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_vacanza && this._lezione.contains("dispari")) {
+      this._lessonColor = Theme.of(context).textTheme.display4.color;
+    } else {
+      this._lessonColor = Theme.of(context).textTheme.display3.color;
+    }
 
     if (this._vacanza) {
       return new Text("");
@@ -49,16 +55,14 @@ class LessonCard extends StatelessWidget {
           children: <Widget>[
             Row(
               children: <Widget>[
-                new Icon(
-                  FontAwesomeIcons.book,
-                  color: Colors.green,
-                  size: 18,
-                ),
+                new Icon(FontAwesomeIcons.book),
                 SizedBox(width: 4),
                 Expanded(
                   child: new Text(_lezione,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: _lessonColor)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: _lessonColor,
+                          fontSize: 18)),
                 ),
               ],
             ),
@@ -71,4 +75,3 @@ class LessonCard extends StatelessWidget {
     }
   }
 }
-
