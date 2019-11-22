@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:school_timetable/screens/SettingScreen.dart';
@@ -32,10 +33,11 @@ class MainScreenState extends State<MainScreen>
   static String _lastDay;
   static var _dayWidget;
   static var _weekWidget;
+  bool _isVisible = true;
   ScrollController _scrollViewController;
-  TabController _tabController;
-  var _tabsTitle;
+  Text _tabsTitle;
   bool _changeTab = false;
+  int _index = 0;
 
   MainScreenState([now, changeTab]) {
     _dayWidget = null;
@@ -63,10 +65,22 @@ class MainScreenState extends State<MainScreen>
       });
     });
     _scrollViewController = new ScrollController();
-    _tabController = new TabController(vsync: this, length: 2);
-    _tabController.addListener(_handleSelected);
+    _scrollViewController.addListener(() {
+      if (_scrollViewController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        setState(() {
+          _isVisible = false;
+        });
+      }
+      if (_scrollViewController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        setState(() {
+          _isVisible = true;
+        });
+      }
+    });
     if (_changeTab) {
-      _tabController.animateTo(1);
+      _index = 1;
     }
   }
 
@@ -144,7 +158,9 @@ class MainScreenState extends State<MainScreen>
     // day title
     if (dayDifference <= 4 && dayDifference >= 0) {
       return new Text(
-        nomeGiorni[dayDifference] + " " + new DateFormat("dd-MM-yyyy").format(_now),
+        nomeGiorni[dayDifference] +
+            " " +
+            new DateFormat("dd-MM-yyyy").format(_now),
       );
     } else {
       return new Text("");
@@ -157,61 +173,16 @@ class MainScreenState extends State<MainScreen>
     );
   }
 
-  getDayButtons() {
-    return new ButtonBar(
-      alignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        FlatButton(
-          child: new Text('PREV DAY'),
-          onPressed: () {
-            prevDay();
-          },
-          textColor: Theme.of(context).buttonColor,
-        ),
-        FlatButton(
-          child: new Text('NEXT DAY'),
-          onPressed: () {
-            this.nextDay();
-            changePage(false);
-          },
-          textColor: Theme.of(context).buttonColor,
-        ),
-      ],
-    );
-  }
-
-  getWeekButtons() {
-    return new ButtonBar(
-      alignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        FlatButton(
-          child: new Text(
-            'PREV WEEK',
-          ),
-          onPressed: () {
-            prevWeek();
-          },
-        ),
-        FlatButton(
-          child: new Text(
-            'NEXT WEEK',
-          ),
-          onPressed: () {
-            nextWeek();
-          },
-        ),
-      ],
-    );
-  }
-
-  void _handleSelected() {
-    if (_tabController.index == 0) {
+  void _handleSelected(index) {
+    if (index == 0) {
       setState(() {
         _tabsTitle = getDayTitle();
+        _index = 0;
       });
     } else {
       setState(() {
         _tabsTitle = getWeekTitle();
+        _index = 1;
       });
     }
   }
@@ -225,7 +196,7 @@ class MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (_tabController.index == 0) {
+    if (_index == 0) {
       _firstDay != null
           ? _tabsTitle = getDayTitle()
           : _tabsTitle = new Text("");
@@ -246,22 +217,13 @@ class MainScreenState extends State<MainScreen>
               automaticallyImplyLeading: false,
               centerTitle: true,
               title: _firstDay != null ? _tabsTitle : new Text(""),
-              pinned: true,
-              floating: true,
               forceElevated: innerBoxIsScrolled,
-              bottom: TabBar(
-                tabs: [
-                  Tab(
-                    icon: Icon(FontAwesomeIcons.calendarDay),
-                    text: "Day",
-                  ),
-                  Tab(icon: Icon(FontAwesomeIcons.calendarWeek), text: "Week"),
-                ],
-                controller: _tabController,
-              ),
               actions: <Widget>[
                 IconButton(
-                  icon: new Icon(Icons.settings),
+                  icon: new Icon(
+                    Icons.settings,
+                    // color: Theme.of(context).appBarTheme.textTheme.title.color,
+                  ),
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SettingsScreen()),
@@ -271,36 +233,67 @@ class MainScreenState extends State<MainScreen>
             )
           ];
         },
-        body: new TabBarView(
-          // getDayButtons
-          children: [
-            _dayWidget != null
-                ? new SingleChildScrollView(
-                    child: new Column(children: <Widget>[
-                      _dayWidget,
-                      getDayButtons(),
-                    ]),
-                  )
-                : Loading(),
-            _weekWidget != null
-                ? new SingleChildScrollView(
-                    child: new Column(children: <Widget>[
-                      _weekWidget,
-                      getWeekButtons(),
-                    ]),
-                  )
-                : Loading(),
+        body: _index == 0
+            ? _dayWidget != null
+            ? GestureDetector(
+          child: new SingleChildScrollView(child: _dayWidget),
+          onPanUpdate: (details) {
+            if (details.delta.dx > 0) {
+              prevDay();
+            } else {
+              nextDay();
+            }
+          },
+        )
+            : Loading()
+            : _weekWidget != null
+            ? GestureDetector(
+          child: new SingleChildScrollView(child: _weekWidget),
+          onPanUpdate: (details) {
+            if (details.delta.dx > 0) {
+              prevWeek();
+            } else {
+              nextWeek();
+            }
+          },
+        )
+            : Loading(),
+      ),
+      bottomNavigationBar: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        height: _isVisible ? 56.0 : 0.0,
+        child: Wrap(
+          children: <Widget>[
+            new BottomNavigationBar(
+              onTap: _handleSelected,
+              type: BottomNavigationBarType.fixed,
+              items: [
+                new BottomNavigationBarItem(
+                  icon: Icon(FontAwesomeIcons.calendarDay),
+                  title: Text('Day'),
+                ),
+                new BottomNavigationBarItem(
+                  icon: Icon(FontAwesomeIcons.calendarWeek),
+                  title: Text('Week'),
+                )
+              ],
+              currentIndex: _index,
+              selectedItemColor: Theme.of(context).iconTheme.color,
+              unselectedItemColor: Theme.of(context).iconTheme.color,
+              unselectedIconTheme: IconThemeData(
+                color: Theme.of(context).iconTheme.color.withAlpha(100),
+              ),
+              unselectedLabelStyle: TextStyle(
+                color: Theme.of(context).iconTheme.color.withAlpha(100),
+              ),
+            )
           ],
-          controller: _tabController,
         ),
       ),
     );
   }
 }
 
-// TODO: dark mode
-// TODO: swipe right -> next day/week
-// TODO: swipe left -> prev day/week
 // TODO: lezioni passate in grigio
 // TODO: aule libere
 // TODO: filtro lezioni

@@ -25,7 +25,7 @@ class WeekView extends StatelessWidget {
         String dayName = this._nomeGiorni[int.parse(lesson["giorno"]) - 1];
         if (giorno != dayName) {
           giorno = dayName;
-          this._lessonsWidgets.add(new Text(dayName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)));
+          this._lessonsWidgets.add(new Text(dayName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Theme.of(context).primaryColor)));
         }
 
         this._lessonsWidgets.add(

@@ -17,14 +17,22 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   var _theme;
+  bool _firstBoot = true;
 
   void initState() {
     super.initState();
     SettingUtils.getData("darktheme").then((value) {
-      bool v = value.toLowerCase() == "true";
-      setState(() {
-        _theme = v ? darkTheme() : lightTheme();
-      });
+     if (value != null) {
+       bool v = value.toLowerCase() == "true";
+       setState(() {
+         _theme = v ? darkTheme() : lightTheme();
+       });
+     } else {
+       SettingUtils.setData("darktheme", "False");
+       setState(() {
+         _theme = lightTheme();
+       });
+     }
     });
   }
 

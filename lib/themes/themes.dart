@@ -15,6 +15,12 @@ ThemeData lightTheme() {
     );
   }
 
+  BottomAppBarTheme _bottomAppBarTheme(BottomAppBarTheme base) {
+    return base.copyWith(
+      color: Colors.green
+    );
+  }
+
   IconThemeData _iconTheme(IconThemeData base) {
     return base.copyWith(color: Colors.green, size: 18);
   }
@@ -37,7 +43,10 @@ ThemeData lightTheme() {
       appBarTheme: _appBarTheme(base.appBarTheme),
       buttonColor: Colors.green,
       iconTheme: _iconTheme(base.iconTheme),
-      textTheme: _textTheme(base.textTheme));
+      textTheme: _textTheme(base.textTheme),
+      bottomAppBarTheme: _bottomAppBarTheme(base.bottomAppBarTheme),
+      primaryColor: Colors.black
+  );
 }
 
 ThemeData darkTheme() {
@@ -84,5 +93,7 @@ ThemeData darkTheme() {
       buttonColor: Colors.green,
       iconTheme: _iconTheme(base.iconTheme),
       textTheme: _textTheme(base.textTheme),
-      tabBarTheme: _tabBarTheme(base.tabBarTheme));
+      tabBarTheme: _tabBarTheme(base.tabBarTheme),
+      primaryColor: Colors.white
+  );
 }
