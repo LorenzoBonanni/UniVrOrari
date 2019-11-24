@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:school_timetable/screens/MainScreen.dart';
 import 'package:school_timetable/widgets/LessonCard.dart';
 
 class WeekView extends StatelessWidget {
   List<Widget> _lessonsWidgets = [];
-  String _firstDay;
-  String _lastDay;
   var _lessons;
+  var _now;
   final _nomeGiorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
 
-  WeekView(firstDay, lastDay, lessons) {
-    this._firstDay = firstDay;
-    this._lastDay = lastDay;
-    this._lessons = lessons;
-  }
+  WeekView(this._lessons, this._now);
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +29,8 @@ class WeekView extends StatelessWidget {
             lesson["aula"],
             lesson["ora_inizio"],
             lesson["ora_fine"],
+            _now,
+            false
           ),
         );
       }

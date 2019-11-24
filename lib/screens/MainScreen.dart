@@ -61,7 +61,7 @@ class MainScreenState extends State<MainScreen>
     MainScreenState.updateTimetable().then((_) {
       setState(() {
         _dayWidget = new DayView(_firstDay, _lessons, _now);
-        _weekWidget = new WeekView(_firstDay, _lastDay, _lessons);
+        _weekWidget = new WeekView( _lessons, _now);
       });
     });
     _scrollViewController = new ScrollController();
@@ -128,7 +128,7 @@ class MainScreenState extends State<MainScreen>
     _now = _now.add(new Duration(days: 7));
     updateTimetable().then((_) {
       setState(() {
-        _weekWidget = new WeekView(_firstDay, _lastDay, _lessons);
+        _weekWidget = new WeekView(_lessons, _now);
       });
     });
     changePage(true);
@@ -138,7 +138,7 @@ class MainScreenState extends State<MainScreen>
     _now = _now.subtract(new Duration(days: 7));
     updateTimetable().then((_) {
       setState(() {
-        _weekWidget = new WeekView(_firstDay, _lastDay, _lessons);
+        _weekWidget = new WeekView(_lessons, _now);
       });
     });
     changePage(true);

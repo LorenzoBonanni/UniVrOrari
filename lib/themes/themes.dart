@@ -32,10 +32,10 @@ ThemeData lightTheme() {
         // ottanio
         display3: TextStyle(color: Color.fromRGBO(2, 142, 185, 100)),
         // field name
-        display2: TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15),
+        display2: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15),
         // filed value
-        display1: TextStyle(color: Colors.black87, fontSize: 15));
+        display1: TextStyle(color: Colors.black87, fontSize: 15),
+    );
   }
 
   final ThemeData base = ThemeData.light();
@@ -45,7 +45,7 @@ ThemeData lightTheme() {
       iconTheme: _iconTheme(base.iconTheme),
       textTheme: _textTheme(base.textTheme),
       bottomAppBarTheme: _bottomAppBarTheme(base.bottomAppBarTheme),
-      primaryColor: Colors.black
+      primaryColor: Colors.black,
   );
 }
 

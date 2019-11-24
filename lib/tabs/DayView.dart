@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_timetable/screens/MainScreen.dart';
+import 'package:school_timetable/widgets/DeactivatedLessonField.dart';
 import 'package:school_timetable/widgets/LessonCard.dart';
 
 class DayView extends StatefulWidget {
@@ -24,7 +25,7 @@ class DayViewState extends State<DayView> {
   List<Widget> _lessonsWidgets = [];
   String _firstDay;
   var _lessons;
-  var _now;
+  DateTime _now;
 
   DayViewState(firstDay, lessons, now) {
     this._firstDay = firstDay;
@@ -48,14 +49,16 @@ class DayViewState extends State<DayView> {
     this._lessons.forEach((lesson) {
       if (int.parse(lesson["giorno"]) == dayDifference + 1) {
         this._lessonsWidgets.add(
-              new LessonCard(
-                lesson["nome_insegnamento"],
-                lesson["docente"],
-                lesson["aula"],
-                lesson["ora_inizio"],
-                lesson["ora_fine"],
-              ),
-            );
+          new LessonCard(
+            lesson["nome_insegnamento"],
+            lesson["docente"],
+            lesson["aula"],
+            lesson["ora_inizio"],
+            lesson["ora_fine"],
+            _now,
+            true
+          ),
+        );
       }
     });
 
