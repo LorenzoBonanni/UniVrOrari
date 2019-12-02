@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:school_timetable/screens/SettingScreen.dart';
-import 'package:school_timetable/tabs/WeekView.dart';
-import 'package:school_timetable/tabs/DayView.dart';
+import 'package:school_timetable/views/EmptyRoomsView.dart';
+import 'package:school_timetable/views/WeekView.dart';
+import 'package:school_timetable/views/DayView.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
-import 'package:school_timetable/utils/FadeRoute.dart';
 import 'package:school_timetable/widgets/Loading.dart';
+
 
 class MainScreen extends StatefulWidget {
   var _now;
@@ -25,8 +27,7 @@ class MainScreen extends StatefulWidget {
   }
 }
 
-class MainScreenState extends State<MainScreen>
-    with SingleTickerProviderStateMixin {
+class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   static var _lessons;
   static DateTime _now;
   static String _firstDay;
@@ -38,6 +39,7 @@ class MainScreenState extends State<MainScreen>
   Text _tabsTitle;
   bool _changeTab = false;
   int _index = 0;
+  Widget _widget;
 
   MainScreenState([now, changeTab]) {
     _dayWidget = null;
@@ -45,42 +47,6 @@ class MainScreenState extends State<MainScreen>
     if (now != null) {
       _now = now;
       _changeTab = changeTab;
-    }
-  }
-
-  initState() {
-    super.initState();
-    if (_now == null) {
-      _now = new DateTime.now();
-    }
-
-    while (DateFormat('EEEE').format(_now) == "Sunday" ||
-        DateFormat('EEEE').format(_now) == "Saturday")
-      _now = _now.add(new Duration(days: 1));
-
-    MainScreenState.updateTimetable().then((_) {
-      setState(() {
-        _dayWidget = new DayView(_firstDay, _lessons, _now);
-        _weekWidget = new WeekView( _lessons, _now);
-      });
-    });
-    _scrollViewController = new ScrollController();
-    _scrollViewController.addListener(() {
-      if (_scrollViewController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        setState(() {
-          _isVisible = false;
-        });
-      }
-      if (_scrollViewController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        setState(() {
-          _isVisible = true;
-        });
-      }
-    });
-    if (_changeTab) {
-      _index = 1;
     }
   }
 
@@ -176,36 +142,125 @@ class MainScreenState extends State<MainScreen>
   void _handleSelected(index) {
     if (index == 0) {
       setState(() {
-        _tabsTitle = getDayTitle();
         _index = 0;
       });
-    } else {
+    } else if (index == 1) {
       setState(() {
-        _tabsTitle = getWeekTitle();
         _index = 1;
+      });
+    } else if (index == 2) {
+      setState(() {
+        _index = 2;
       });
     }
   }
 
-  void changePage(changeTab) {
+
+  void changePage(bool changeTab) {
     Navigator.push(
-      context,
-      FadeRoute(builder: (context) => MainScreen(_now, changeTab)),
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: MainScreen(_now, changeTab)
+        )
     );
+  }
+
+
+  void setupScroll() {
+    _scrollViewController = new ScrollController();
+    _scrollViewController.addListener(() {
+      if (_scrollViewController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        setState(() {
+          _isVisible = false;
+        });
+      }
+      if (_scrollViewController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        setState(() {
+          _isVisible = true;
+        });
+      }
+    });
+  }
+
+  initState() {
+    setupScroll();
+    if (_changeTab) {
+      _index = 1;
+    }
+
+    // if now isn't set it
+    if (_now == null) {
+      _now = new DateTime.now();
+    }
+
+    // if the date is weekend go to monday
+    while (
+        DateFormat('EEEE').format(_now) == "Sunday" ||
+        DateFormat('EEEE').format(_now) == "Saturday"
+    ) {
+      _now = _now.add(new Duration(days: 1));
+    }
+
+    // set DayView and WeekView widgets
+    MainScreenState.updateTimetable().then((_) {
+      setState(() {
+        _dayWidget = new DayView(_firstDay, _lessons, _now);
+        _weekWidget = new WeekView( _lessons, _now);
+      });
+    });
+
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_index == 0) {
-      _firstDay != null
-          ? _tabsTitle = getDayTitle()
-          : _tabsTitle = new Text("");
-    } else {
-      setState(() {
-        _firstDay != null
-            ? _tabsTitle = getWeekTitle()
-            : _tabsTitle = new Text("");
-      });
+    switch(_index){
+      case 0:
+        Widget dayView = GestureDetector(
+          child: new SingleChildScrollView(child: _dayWidget),
+          onPanUpdate: (details) {
+            if (details.delta.dx > 0) {
+              prevDay();
+            } else {
+              nextDay();
+            }
+          },
+        );
+        setState(() {
+          _widget = null;
+          _tabsTitle = _firstDay != null ? getDayTitle() : new Text("");
+          _widget = _dayWidget != null ? dayView : Loading();
+        });
+        break;
+
+      case 1:
+        Widget weekView = GestureDetector(
+          child: new SingleChildScrollView(child: _weekWidget),
+          onPanUpdate: (details) {
+            if (details.delta.dx > 0) {
+              prevWeek();
+            } else {
+              nextWeek();
+            }
+          },
+        );
+
+        setState(() {
+          _tabsTitle = _firstDay != null ? getWeekTitle() : new Text("");
+          _widget = _weekWidget != null ? weekView : Loading();
+        });
+        break;
+
+      case 2:
+        setState(() {
+          _tabsTitle = new Text("Aule Libere");
+          _widget = new EmptyRoomsView();
+        });
+        break;
     }
 
     return new Scaffold(
@@ -233,31 +288,7 @@ class MainScreenState extends State<MainScreen>
             )
           ];
         },
-        body: _index == 0
-            ? _dayWidget != null
-            ? GestureDetector(
-          child: new SingleChildScrollView(child: _dayWidget),
-          onPanUpdate: (details) {
-            if (details.delta.dx > 0) {
-              prevDay();
-            } else {
-              nextDay();
-            }
-          },
-        )
-            : Loading()
-            : _weekWidget != null
-            ? GestureDetector(
-          child: new SingleChildScrollView(child: _weekWidget),
-          onPanUpdate: (details) {
-            if (details.delta.dx > 0) {
-              prevWeek();
-            } else {
-              nextWeek();
-            }
-          },
-        )
-            : Loading(),
+        body: _widget != null ? _widget : Loading()
       ),
       bottomNavigationBar: AnimatedContainer(
         duration: Duration(milliseconds: 300),
@@ -275,6 +306,10 @@ class MainScreenState extends State<MainScreen>
                 new BottomNavigationBarItem(
                   icon: Icon(FontAwesomeIcons.calendarWeek),
                   title: Text('Week'),
+                ),
+                new BottomNavigationBarItem(
+                  icon: Icon(FontAwesomeIcons.doorOpen),
+                  title: Text('Aule Libere'),
                 )
               ],
               currentIndex: _index,
@@ -294,6 +329,4 @@ class MainScreenState extends State<MainScreen>
   }
 }
 
-// TODO: lezioni passate in grigio
-// TODO: aule libere
 // TODO: filtro lezioni

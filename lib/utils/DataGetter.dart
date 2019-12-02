@@ -34,4 +34,20 @@ class DataGetter{
     return jsonDecode(response.body);
   }
 
+  static Future getCampuses() async {
+    final url = "https://logistica.univr.it/PortaleStudentiUnivr/combo_call.php?sw=rooms_";
+    var client = Client();
+    // https://regex101.com/r/FdF8U9/1
+    RegExp regExp = new RegExp(r'var elenco_sedi = (\[{.+}\])');
+    Response response = await client.get(url);
+    // apply regex and select only array
+    return jsonDecode(regExp.firstMatch(response.body).group(1));
+  }
+
+  static Future getEmptyRooms(String id) async {
+    var url = "http://progetti.altervista.org/orari/aule.php" + "?id=" + id;
+    var client = Client();
+    Response response = await client.get(url);
+    return jsonDecode(response.body);
+  }
 }

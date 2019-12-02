@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:school_timetable/blocs/theme.dart';
+import 'package:school_timetable/screens/CampusesSelectionScreen.dart';
 import 'package:school_timetable/screens/CourseSelectionScreen.dart';
-import 'package:school_timetable/themes/themes.dart';
+import 'package:school_timetable/themes/darkTheme.dart';
+import 'package:school_timetable/themes/lightTheme.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -37,21 +39,33 @@ class SettingsScreenState extends State<SettingsScreen> {
             new FlatButton(
               child: new Text(
                 "CAMBIA CORSO",
-                style: TextStyle(color: Colors.white)
+                style: TextStyle(color: Colors.green),
               ),
-              color: Theme.of(context).buttonColor,
               onPressed: () {
-                SettingUtils.setSetted(false).whenComplete(() {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CourseSelectionScreen(),
-                    ),
-                  );
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CourseSelectionScreen(),
+                  ),
+                );
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "CAMBIA POLI",
+                style: TextStyle(color: Colors.green),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CampusesSelectionScreen(),
+                  ),
+                );
               },
             ),
             new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Text(
                   "DarkMode",

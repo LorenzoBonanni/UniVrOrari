@@ -11,7 +11,7 @@ description: A flutter applicatio to see lesson schedule
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.3+4
+version: 2.0.4+5
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -29,6 +29,7 @@ dependencies:
   font_awesome_flutter: ^8.5.0
   provider: ^3.1.0+1
   swipedetector: ^1.2.0
+  page_transition: ^1.1.5
 
 
 dev_dependencies:

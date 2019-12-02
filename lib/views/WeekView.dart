@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:school_timetable/widgets/LessonCard.dart';
+import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
 class WeekView extends StatelessWidget {
   List<Widget> _lessonsWidgets = [];

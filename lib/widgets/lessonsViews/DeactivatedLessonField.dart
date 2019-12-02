@@ -10,8 +10,8 @@ class DeactivatedLessonField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
-          new MaterialButton(onPressed: null),
-        );
+        new MaterialButton(onPressed: null)
+    );
 
     return Padding(
       padding: const EdgeInsets.only(left: 3.0, top: 2.0),

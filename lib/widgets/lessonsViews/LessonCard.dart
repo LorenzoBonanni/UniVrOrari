@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:school_timetable/widgets/DeactivatedLessonField.dart';
-import 'package:school_timetable/widgets/LessonField.dart';
+import 'package:school_timetable/widgets/lessonsViews/DeactivatedLessonField.dart';
+import 'package:school_timetable/widgets/lessonsViews/LessonField.dart';
 
 class LessonCard extends StatelessWidget {
   String _lezione;

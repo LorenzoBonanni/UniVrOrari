@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_timetable/screens/MainScreen.dart';
-import 'package:school_timetable/widgets/DeactivatedLessonField.dart';
-import 'package:school_timetable/widgets/LessonCard.dart';
+import 'package:school_timetable/widgets/lessonsViews/DeactivatedLessonField.dart';
+import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
 class DayView extends StatefulWidget {
   String _firstDay;

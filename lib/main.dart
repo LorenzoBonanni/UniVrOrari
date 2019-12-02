@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:school_timetable/blocs/theme.dart';
-import 'package:school_timetable/screens/CourseSelectionScreen.dart';
-import 'package:school_timetable/themes/themes.dart';
+import 'package:school_timetable/screens/MainScreen.dart';
+import 'package:school_timetable/screens/SettingScreen.dart';
+import 'package:school_timetable/themes/darkTheme.dart';
+import 'package:school_timetable/themes/lightTheme.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 import 'package:school_timetable/widgets/Loading.dart';
 
@@ -17,10 +19,9 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   var _theme;
-  bool _firstBoot = true;
 
   void initState() {
-    super.initState();
+    // check theme
     SettingUtils.getData("darktheme").then((value) {
      if (value != null) {
        bool v = value.toLowerCase() == "true";
@@ -34,6 +35,9 @@ class MyAppState extends State<MyApp> {
        });
      }
     });
+
+
+    super.initState();
   }
 
   @override
@@ -43,17 +47,37 @@ class MyAppState extends State<MyApp> {
             builder: (_) => ThemeChanger(_theme),
             child: new MyAppWithTheme(),
           )
-        : new MaterialApp(home: Loading(),);
+        : new MaterialApp(home: Loading());
   }
 }
 
-class MyAppWithTheme extends StatelessWidget {
+class MyAppWithTheme extends StatefulWidget {
+  @override
+  _MyAppWithThemeState createState() => _MyAppWithThemeState();
+}
+
+class _MyAppWithThemeState extends State<MyAppWithTheme> {
+  Widget _home;
+
+  @override
+  void initState() {
+    SettingUtils.getCampusList().then((campuses) async {
+      bool isSet = await SettingUtils.getIsSet();
+      if(isSet == null) {
+        SettingUtils.setSetted(false);
+      }
+      setState(() {
+        _home = (isSet == null || !isSet) && campuses != null ? MainScreen() : SettingsScreen();
+      });
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeChanger>(context);
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: new CourseSelectionScreen(),
+      home: _home != null ? _home : Loading(),
       title: "Univr Orari",
       theme: theme.getTheme(),
     );
