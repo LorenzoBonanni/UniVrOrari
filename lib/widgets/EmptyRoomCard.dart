@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:school_timetable/widgets/settings/campusSelection/EmptyRoomText.dart';
+import 'package:school_timetable/widgets/EmptyRoomText.dart';
 
 class EmptyRoomCard extends StatefulWidget {
   var _roomsData;
@@ -21,6 +21,9 @@ class EmptyRoomCardState extends State<EmptyRoomCard> {
   @override
   void initState() {
     for (var roomData in _roomsData) {
+      if(roomData["name"].contains("Ufficio docenti esterni")) {
+        continue;
+      }
       this._widgets.add(new EmptyRoomText(roomData));
     }
     setState(() {});

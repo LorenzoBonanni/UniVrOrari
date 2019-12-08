@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EmptyRoomText extends StatefulWidget {
   var _roomData;
@@ -13,37 +14,40 @@ class EmptyRoomText extends StatefulWidget {
 
 class EmptyRoomTextState extends State<EmptyRoomText> {
   var _roomData;
-  Widget _widget;
+  String _roomName;
+  String _until;
 
   EmptyRoomTextState(this._roomData);
 
   @override
   void initState() {
-    String roomName = _roomData["name"];
-    String closureDate = "";
-    if (_roomData["until"] == 0) {
-      closureDate += " fino a Chiusura";
-    }
-    else {
-      DateTime datetime = new DateTime.fromMillisecondsSinceEpoch(_roomData["until"] * 1000);
-      String time = datetime.hour.toString() + ":" + datetime.minute.toString();
-      closureDate += " " + time;
-    }
     setState(() {
-      _widget = new Wrap(
-        children: <Widget>[
-          new Text(roomName, style: new TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-          new Text(closureDate, style: new TextStyle(color: Colors.black))
-        ],
-      );
+      _roomName = _roomData["name"];
     });
+    if (_roomData["until"] == 0) {
+      setState(() {
+        _until = " fino a Chiusura";
+      });
+    } else {
+      DateTime datetime =
+          new DateTime.fromMillisecondsSinceEpoch(_roomData["until"] * 1000);
+      String time = new DateFormat("HH:mm").format(datetime).toString();
+      setState(() {
+        _until = " fino alle " + time;
+      });
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _widget != null
-        ? _widget
+    return _roomName != null && _until != null
+        ? new Wrap(
+            children: <Widget>[
+              new Text(_roomName, style: Theme.of(context).textTheme.display2),
+              new Text(_until, style: Theme.of(context).textTheme.display1)
+            ],
+          )
         : new Text("empty", style: new TextStyle(color: Colors.black));
   }
 }

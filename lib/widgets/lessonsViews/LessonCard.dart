@@ -12,15 +12,16 @@ class LessonCard extends StatelessWidget {
   DateTime _now;
   bool _vacanza = false;
   var _lessonColor;
-  bool _flag;
+  bool _flag; // IF TRUE FATHER WIDGET IS DAY VIEW
 
-  LessonCard(this._lezione, this._docente, this._aula, this._inizio, this._fine,
-      this._now, this._flag) {
-    if (_lezione == null ||
+  LessonCard(this._lezione, this._docente, this._aula, this._inizio, this._fine, this._now, this._flag) {
+    if (
+        _lezione == null ||
         _docente == null ||
         _aula == null ||
         _inizio == null ||
-        _fine == null) {
+        _fine == null
+    ) {
       this._vacanza = true;
     }
   }
@@ -33,10 +34,11 @@ class LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
+    Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor (
           new MaterialButton(onPressed: null),
         );
 
+    // select lesson name color
     if (!_vacanza && this._lezione.contains("dispari")) {
       this._lessonColor = Theme.of(context).textTheme.display4.color;
     } else {
@@ -49,10 +51,15 @@ class LessonCard extends StatelessWidget {
       // se l'ora di inizio è inferiore a l'ora attuale e il giorno è uguale al giorno di oggi ==> disattivato
       DateTime currentDate = DateTime.now();
       DateTime ora_inizio = parseTime(_inizio);
-      if (currentDate.day == _now.day &&
+
+      //
+      if (
+              this._flag &&
+              currentDate.day == _now.day &&
               currentDate.month == _now.month &&
               currentDate.year == _now.year &&
-          ora_inizio.isBefore(currentDate) && this._flag) {
+              ora_inizio.isBefore(currentDate)
+      ) {
         return new Card(
           child: new Column(
             children: <Widget>[
@@ -76,11 +83,14 @@ class LessonCard extends StatelessWidget {
                 ],
               ),
               new DeactivatedLessonField(
-                  "Orario", _inizio + " - " + _fine, FontAwesomeIcons.clock),
+                  "Orario", _inizio + " - " + _fine, FontAwesomeIcons.clock
+              ),
               new DeactivatedLessonField(
-                  "Aula", _aula, FontAwesomeIcons.mapMarkerAlt),
+                  "Aula", _aula, FontAwesomeIcons.mapMarkerAlt
+              ),
               new DeactivatedLessonField(
-                  "Docente", _docente, FontAwesomeIcons.user),
+                  "Docente", _docente, FontAwesomeIcons.user
+              ),
             ],
           ),
         );
@@ -98,13 +108,13 @@ class LessonCard extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: _lessonColor,
-                          fontSize: 18),
+                          fontSize: 18
+                      ),
                     ),
                   ),
                 ],
               ),
-              new LessonField(
-                  "Orario", _inizio + " - " + _fine, FontAwesomeIcons.clock),
+              new LessonField("Orario", _inizio + " - " + _fine, FontAwesomeIcons.clock),
               new LessonField("Aula", _aula, FontAwesomeIcons.mapMarkerAlt),
               new LessonField("Docente", _docente, FontAwesomeIcons.user),
             ],

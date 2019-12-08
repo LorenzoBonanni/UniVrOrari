@@ -14,7 +14,7 @@ class CampusSelectionWidget extends StatefulWidget {
 class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
   var _campuses;
   bool _setted = false;
-  Widget _hint = new Text("Seleziona un Polo");
+  Widget _hint;
   List<DropdownMenuItem<String>> _items;
 
   CampusSelectionWidgetState(this._campuses);
@@ -27,10 +27,7 @@ class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
           value: campus["label"],
           child: new Text(
             campus["label"],
-            // style: TextStyle(color: Theme.of(context).textTheme.display1.color),
-            style: TextStyle(
-              color: Colors.black,
-            ),
+            style: TextStyle(color: Theme.of(context).textTheme.display1.color),
           ),
         ),
       );
@@ -49,23 +46,28 @@ class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
     SettingUtils.setCampusList(map["valore"]);
   }
 
+  @override
   void initState() {
+    super.initState();
+    setState(() {
+      _hint = new Text("Seleziona un Polo");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     generateItems().then((items) {
       setState(() {
         _items = items;
       });
     });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return this._items != null
         ? DropdownButton(
             hint: _hint,
             isExpanded: true,
             items: this._items,
             onChanged: !_setted ? dropDownChanged : null,
+            style: Theme.of(context).textTheme.display1
           )
         : DropdownButton(items: [], onChanged: null);
   }

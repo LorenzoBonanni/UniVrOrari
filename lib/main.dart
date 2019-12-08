@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:school_timetable/blocs/theme.dart';
+import 'package:school_timetable/screens/CampusesSelectionScreen.dart';
+import 'package:school_timetable/screens/CourseSelectionScreen.dart';
 import 'package:school_timetable/screens/MainScreen.dart';
-import 'package:school_timetable/screens/SettingScreen.dart';
 import 'package:school_timetable/themes/darkTheme.dart';
 import 'package:school_timetable/themes/lightTheme.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
@@ -63,12 +64,22 @@ class _MyAppWithThemeState extends State<MyAppWithTheme> {
   void initState() {
     SettingUtils.getCampusList().then((campuses) async {
       bool isSet = await SettingUtils.getIsSet();
-      if(isSet == null) {
-        SettingUtils.setSetted(false);
+      if(isSet == null || !isSet){
+        setState(() {
+          _home = CourseSelectionScreen();
+        });
+      } else if(campuses.isEmpty || campuses==null){
+        if(campuses==null) {
+          SettingUtils.updateCampusList();
+        }
+        setState(() {
+          _home = CampusesSelectionScreen();
+        });
+      } else {
+        setState(() {
+          _home = MainScreen();
+        });
       }
-      setState(() {
-        _home = (isSet == null || !isSet) && campuses != null ? MainScreen() : SettingsScreen();
-      });
     });
     super.initState();
   }
