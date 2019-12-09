@@ -21,7 +21,7 @@ class SettingUtils {
     return prefs.setBool("setted", value);
   }
 
-  static Future<bool> getIsSet() async {
+  static Future<bool> getSetted() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('setted');
   }

@@ -3,7 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:school_timetable/screens/CampusesSelectionScreen.dart';
+import 'package:school_timetable/screens/CourseSelectionScreen.dart';
 import 'package:school_timetable/screens/SettingScreen.dart';
+import 'package:school_timetable/utils/SettingUtils.dart';
 import 'package:school_timetable/views/EmptyRoomsView.dart';
 import 'package:school_timetable/views/WeekView.dart';
 import 'package:school_timetable/views/DayView.dart';
@@ -186,6 +189,21 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
 
   initState() {
+    SettingUtils.getCampusList().then((campuses) async {
+      bool isSet = await SettingUtils.getSetted();
+      if(isSet == null || !isSet){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CourseSelectionScreen()),
+        );
+      } else if(campuses.isEmpty || campuses==null){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CampusesSelectionScreen()),
+        );
+      }
+    });
+
     setupScroll();
     if (_changeTab) {
       _index = 1;

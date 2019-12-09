@@ -52,43 +52,13 @@ class MyAppState extends State<MyApp> {
   }
 }
 
-class MyAppWithTheme extends StatefulWidget {
-  @override
-  _MyAppWithThemeState createState() => _MyAppWithThemeState();
-}
-
-class _MyAppWithThemeState extends State<MyAppWithTheme> {
-  Widget _home;
-
-  @override
-  void initState() {
-    SettingUtils.getCampusList().then((campuses) async {
-      bool isSet = await SettingUtils.getIsSet();
-      if(isSet == null || !isSet){
-        setState(() {
-          _home = CourseSelectionScreen();
-        });
-      } else if(campuses.isEmpty || campuses==null){
-        if(campuses==null) {
-          SettingUtils.updateCampusList();
-        }
-        setState(() {
-          _home = CampusesSelectionScreen();
-        });
-      } else {
-        setState(() {
-          _home = MainScreen();
-        });
-      }
-    });
-    super.initState();
-  }
+class MyAppWithTheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeChanger>(context);
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: _home != null ? _home : Loading(),
+      home: MainScreen(),
       title: "Univr Orari",
       theme: theme.getTheme(),
     );
