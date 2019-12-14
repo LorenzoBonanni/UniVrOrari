@@ -5,8 +5,6 @@ import 'package:school_timetable/widgets/settings/courseSelection/CourseSelectio
 import 'package:school_timetable/widgets/settings/courseSelection/Year2SelectionWidget.dart';
 import 'package:school_timetable/widgets/settings/courseSelection/YearSelectionWidget.dart';
 
-import '../main.dart';
-
 class CourseSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

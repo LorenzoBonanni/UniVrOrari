@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LessonField extends StatelessWidget {
   String _text;
-  String _fieldName;
   var _icon;
 
-  LessonField(fieldName, text, icon) {
-    this._text = text;
-    this._fieldName = fieldName;
-    this._icon = icon;
-  }
+  LessonField(fieldName, this._text , this._icon);
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +15,12 @@ class LessonField extends StatelessWidget {
         children: <Widget>[
           new Icon(this._icon),
           SizedBox(width: 4),
-          new Text(
-            _fieldName + ": ",
-            style: Theme.of(context).textTheme.display2,
-          ),
           Expanded(
               child: new Text(
             _text,
-            style: Theme.of(context).textTheme.display1,
+            style: GoogleFonts.workSans(
+              textStyle: Theme.of(context).textTheme.display1,
+            ),
           ))
         ],
       ),

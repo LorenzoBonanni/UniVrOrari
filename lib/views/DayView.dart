@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:school_timetable/screens/MainScreen.dart';
-import 'package:school_timetable/widgets/lessonsViews/DeactivatedLessonField.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
 class DayView extends StatefulWidget {
@@ -62,8 +59,9 @@ class DayViewState extends State<DayView> {
       }
     });
 
-    return new Column(
-      children: _lessonsWidgets,
+    return ListView.builder(
+        itemCount: _lessonsWidgets.length,
+        itemBuilder: (context, index) => _lessonsWidgets[index]
     );
   }
 }

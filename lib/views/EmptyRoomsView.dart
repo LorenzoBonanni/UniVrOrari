@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
-import 'package:school_timetable/widgets/EmptyRoomCard.dart';
+import 'package:school_timetable/widgets/EmptyRoom/EmptyRoomCard.dart';
 import 'package:school_timetable/widgets/Loading.dart';
 import 'package:school_timetable/widgets/lessonsViews/NoRoomAvailable.dart';
 

@@ -5,7 +5,6 @@ import 'package:school_timetable/utils/SettingUtils.dart';
 import 'package:school_timetable/widgets/settings/campusSelection/CampusSelectionWidget.dart';
 import 'package:school_timetable/widgets/Loading.dart';
 
-import '../main.dart';
 
 
 class CampusesSelectionScreen extends StatefulWidget {

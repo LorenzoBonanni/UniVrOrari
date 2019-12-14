@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:school_timetable/widgets/EmptyRoomText.dart';
+import 'package:school_timetable/widgets/EmptyRoom/EmptyRoomText.dart';
 
 class EmptyRoomCard extends StatefulWidget {
-  var _roomsData;
+  final _roomsData;
 
   EmptyRoomCard(this._roomsData);
 

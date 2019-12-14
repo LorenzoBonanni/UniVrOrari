@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 class DeactivatedLessonField extends StatelessWidget {
   String _text;
-  String _fieldName;
   var _icon;
 
-  DeactivatedLessonField(this._fieldName, this._text, this._icon);
+  DeactivatedLessonField(this._text, this._icon);
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +21,6 @@ class DeactivatedLessonField extends StatelessWidget {
             color: disabledColor,
           ),
           SizedBox(width: 4),
-          new Text(
-            _fieldName + ": ",
-            style: Theme.of(context)
-                .textTheme
-                .display2
-                .copyWith(color: disabledColor),
-          ),
           Expanded(
             child: new Text(
               _text,

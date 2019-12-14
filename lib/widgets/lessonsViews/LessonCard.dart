@@ -1,25 +1,27 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:school_timetable/widgets/lessonsViews/DeactivatedLessonField.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonField.dart';
 
 class LessonCard extends StatelessWidget {
-  String _lezione;
-  String _docente;
-  String _aula;
-  String _inizio;
-  String _fine;
-  DateTime _now;
+  final String _lezione;
+  final String _docente;
+  final String _aula;
+  final String _inizio;
+  final String _fine;
+  final DateTime _now;
+  final bool _flag; // IF TRUE FATHER WIDGET IS DAY VIEW
   bool _vacanza = false;
   var _lessonColor;
-  bool _flag; // IF TRUE FATHER WIDGET IS DAY VIEW
 
   LessonCard(this._lezione, this._docente, this._aula, this._inizio, this._fine, this._now, this._flag) {
     if (
         _lezione == null ||
         _docente == null ||
-        _aula == null ||
-        _inizio == null ||
+        _aula == null    ||
+        _inizio == null  ||
         _fine == null
     ) {
       this._vacanza = true;
@@ -34,7 +36,7 @@ class LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor (
+    Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
           new MaterialButton(onPressed: null),
         );
 
@@ -53,12 +55,11 @@ class LessonCard extends StatelessWidget {
       DateTime ora_inizio = parseTime(_inizio);
 
       //
-      if (
-              this._flag &&
-              currentDate.day == _now.day &&
-              currentDate.month == _now.month &&
-              currentDate.year == _now.year &&
-              ora_inizio.isBefore(currentDate)
+      if (this._flag &&
+          currentDate.day == _now.day &&
+          currentDate.month == _now.month &&
+          currentDate.year == _now.year &&
+          ora_inizio.isBefore(currentDate)
       ) {
         return new Card(
           child: new Column(
@@ -76,21 +77,16 @@ class LessonCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: disabledColor,
-                        fontSize: 18,
+                        fontSize: 17,
                       ),
                     ),
                   ),
                 ],
               ),
               new DeactivatedLessonField(
-                  "Orario", _inizio + " - " + _fine, FontAwesomeIcons.clock
-              ),
-              new DeactivatedLessonField(
-                  "Aula", _aula, FontAwesomeIcons.mapMarkerAlt
-              ),
-              new DeactivatedLessonField(
-                  "Docente", _docente, FontAwesomeIcons.user
-              ),
+                  _inizio + " - " + _fine, FontAwesomeIcons.clock),
+              new DeactivatedLessonField(_aula, FontAwesomeIcons.mapMarkerAlt),
+              new DeactivatedLessonField(_docente, FontAwesomeIcons.user),
             ],
           ),
         );
@@ -103,13 +99,15 @@ class LessonCard extends StatelessWidget {
                   new Icon(FontAwesomeIcons.book),
                   SizedBox(width: 4),
                   Expanded(
-                    child: new Text(
+                    child: new AutoSizeText(
                       _lezione,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _lessonColor,
-                          fontSize: 18
+                      style: GoogleFonts.acme(
+                          textStyle: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              color: _lessonColor,
+                              fontSize: 17),
                       ),
+                      maxLines: 1,
                     ),
                   ),
                 ],

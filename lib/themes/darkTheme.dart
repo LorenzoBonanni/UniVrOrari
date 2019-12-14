@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData darkTheme() {
   AppBarTheme _appBarTheme(AppBarTheme base) {
     return base.copyWith(
-      color: Color(0xff177a3d),
+      color: Color(0xff303030),
       iconTheme: new IconThemeData(color: Colors.white),
       textTheme: new TextTheme(
-        title: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Colors.white,
+        title: GoogleFonts.raleway(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -21,7 +24,7 @@ ThemeData darkTheme() {
 
   TextTheme _textTheme(TextTheme base) {
     return TextTheme(
-      // rosa
+        // rosa
         display4: TextStyle(color: Color(0xfff551e7)),
         // blu
         display3: TextStyle(color: Color(0xff6ea0f5)),
@@ -33,9 +36,7 @@ ThemeData darkTheme() {
   }
 
   _tabBarTheme(TabBarTheme base) {
-    base.copyWith(
-        labelColor: Colors.green
-    );
+    base.copyWith(labelColor: Colors.green);
   }
 
   final ThemeData base = ThemeData.dark();
@@ -45,6 +46,5 @@ ThemeData darkTheme() {
       iconTheme: _iconTheme(base.iconTheme),
       textTheme: _textTheme(base.textTheme),
       tabBarTheme: _tabBarTheme(base.tabBarTheme),
-      primaryColor: Colors.white
-  );
+      primaryColor: Colors.white);
 }

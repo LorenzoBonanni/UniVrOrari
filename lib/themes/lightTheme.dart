@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData lightTheme() {
   AppBarTheme _appBarTheme(AppBarTheme base) {
     return base.copyWith(
-      color: Colors.green,
-      iconTheme: new IconThemeData(color: Colors.white),
+      color: Color(0xfffafafa),
+      iconTheme: new IconThemeData(color: Colors.green),
       textTheme: new TextTheme(
-        title: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Colors.white,
+        title: GoogleFonts.raleway(textStyle: TextStyle (
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.green,
+          ),
         ),
       ),
-    );
-  }
-
-  BottomAppBarTheme _bottomAppBarTheme(BottomAppBarTheme base) {
-    return base.copyWith(
-        color: Colors.green
     );
   }
 
@@ -44,7 +40,6 @@ ThemeData lightTheme() {
     buttonColor: Colors.green,
     iconTheme: _iconTheme(base.iconTheme),
     textTheme: _textTheme(base.textTheme),
-    bottomAppBarTheme: _bottomAppBarTheme(base.bottomAppBarTheme),
     primaryColor: Colors.black,
   );
 }

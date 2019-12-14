@@ -1,6 +1,9 @@
+import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
+import 'package:circular_bottom_navigation/tab_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:school_timetable/screens/CampusesSelectionScreen.dart';
@@ -13,9 +16,9 @@ import 'package:school_timetable/views/DayView.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
 import 'package:school_timetable/widgets/Loading.dart';
 
-
+// ignore: must_be_immutable
 class MainScreen extends StatefulWidget {
-  var _now;
+  final _now;
   bool _changeTab = false;
 
   MainScreen([this._now, this._changeTab]);
@@ -41,8 +44,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   ScrollController _scrollViewController;
   Text _tabsTitle;
   bool _changeTab = false;
-  int _index = 0;
   Widget _widget;
+  CircularBottomNavigationController _navigationController = new CircularBottomNavigationController(0);
 
   MainScreenState([now, changeTab]) {
     _dayWidget = null;
@@ -126,38 +129,22 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
     // day title
     if (dayDifference <= 4 && dayDifference >= 0) {
-      return new Text(
-        nomeGiorni[dayDifference] +
-            " " +
-            new DateFormat("dd-MM-yyyy").format(_now),
-      );
+      String text = nomeGiorni[dayDifference] + " " + new DateFormat("dd-MM-yyyy").format(_now);
+      return new Text(text);
     } else {
       return new Text("");
     }
   }
 
   static getWeekTitle() {
-    return new Text(
-      _firstDay + " - " + _lastDay,
-    );
+    return new Text(_firstDay + " - " + _lastDay);
   }
 
   void _handleSelected(index) {
-    if (index == 0) {
-      setState(() {
-        _index = 0;
-      });
-    } else if (index == 1) {
-      setState(() {
-        _index = 1;
-      });
-    } else if (index == 2) {
-      setState(() {
-        _index = 2;
-      });
-    }
+    setState(() {
+      _navigationController.value = index;
+    });
   }
-
 
   void changePage(bool changeTab) {
     Navigator.push(
@@ -165,20 +152,21 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
         PageTransition(
             type: PageTransitionType.fade,
             child: MainScreen(_now, changeTab)
-        )
+        ),
     );
   }
-
 
   void setupScroll() {
     _scrollViewController = new ScrollController();
     _scrollViewController.addListener(() {
+      // if user scroll down hide
       if (_scrollViewController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         setState(() {
           _isVisible = false;
         });
       }
+      // if user scroll up show
       if (_scrollViewController.position.userScrollDirection ==
           ScrollDirection.forward) {
         setState(() {
@@ -191,12 +179,12 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   initState() {
     SettingUtils.getCampusList().then((campuses) async {
       bool isSet = await SettingUtils.getSetted();
-      if(isSet == null || !isSet){
+      if (isSet == null || !isSet) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CourseSelectionScreen()),
         );
-      } else if(campuses.isEmpty || campuses==null){
+      } else if (campuses.isEmpty || campuses == null) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CampusesSelectionScreen()),
@@ -206,7 +194,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
     setupScroll();
     if (_changeTab) {
-      _index = 1;
+      _navigationController.value = 1;
     }
 
     // if now isn't set it
@@ -215,10 +203,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     }
 
     // if the date is weekend go to monday
-    while (
-        DateFormat('EEEE').format(_now) == "Sunday" ||
-        DateFormat('EEEE').format(_now) == "Saturday"
-    ) {
+    while (DateFormat('EEEE').format(_now) == "Sunday" ||
+        DateFormat('EEEE').format(_now) == "Saturday") {
       _now = _now.add(new Duration(days: 1));
     }
 
@@ -226,20 +212,19 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     MainScreenState.updateTimetable().then((_) {
       setState(() {
         _dayWidget = new DayView(_firstDay, _lessons, _now);
-        _weekWidget = new WeekView( _lessons, _now);
+        _weekWidget = new WeekView(_lessons, _now);
       });
     });
-
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    switch(_index){
+    switch (_navigationController.value) {
       case 0:
         Widget dayView = GestureDetector(
-          child: new SingleChildScrollView(child: _dayWidget),
+          child: _dayWidget,
           onPanUpdate: (details) {
             if (details.delta.dx > 0) {
               prevDay();
@@ -249,7 +234,6 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
           },
         );
         setState(() {
-          _widget = null;
           _tabsTitle = _firstDay != null ? getDayTitle() : new Text("");
           _widget = _dayWidget != null ? dayView : Loading();
         });
@@ -257,7 +241,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
       case 1:
         Widget weekView = GestureDetector(
-          child: new SingleChildScrollView(child: _weekWidget),
+          child: _weekWidget,
           onPanUpdate: (details) {
             if (details.delta.dx > 0) {
               prevWeek();
@@ -266,7 +250,6 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
             }
           },
         );
-
         setState(() {
           _tabsTitle = _firstDay != null ? getWeekTitle() : new Text("");
           _widget = _weekWidget != null ? weekView : Loading();
@@ -283,68 +266,66 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
     return new Scaffold(
       body: new NestedScrollView(
-        controller: _scrollViewController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            new SliverAppBar(
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-              title: _firstDay != null ? _tabsTitle : new Text(""),
-              forceElevated: innerBoxIsScrolled,
-              actions: <Widget>[
-                IconButton(
-                  icon: new Icon(
-                    Icons.settings,
-                    // color: Theme.of(context).appBarTheme.textTheme.title.color,
+          controller: _scrollViewController,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              new SliverAppBar(
+                automaticallyImplyLeading: false,
+                centerTitle: true,
+                title: _firstDay != null ? _tabsTitle : new Text(""),
+                // forceElevated: innerBoxIsScrolled,
+                actions: <Widget>[
+                  IconButton(
+                    icon: new Icon(
+                      Icons.settings,
+                      // color: Theme.of(context).appBarTheme.textTheme.title.color,
+                    ),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsScreen()),
+                    ),
                   ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsScreen()),
-                  ),
-                ),
-              ],
-            )
-          ];
-        },
-        body: _widget != null ? _widget : Loading()
+                ],
+              )
+            ];
+          },
+          body: _widget != null ? _widget : Loading(),
       ),
       bottomNavigationBar: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        height: _isVisible ? 56.0 : 0.0,
-        child: Wrap(
-          children: <Widget>[
-            new BottomNavigationBar(
-              onTap: _handleSelected,
-              type: BottomNavigationBarType.fixed,
-              items: [
-                new BottomNavigationBarItem(
-                  icon: Icon(FontAwesomeIcons.calendarDay),
-                  title: Text('Day'),
-                ),
-                new BottomNavigationBarItem(
-                  icon: Icon(FontAwesomeIcons.calendarWeek),
-                  title: Text('Week'),
-                ),
-                new BottomNavigationBarItem(
-                  icon: Icon(FontAwesomeIcons.doorOpen),
-                  title: Text('Aule Libere'),
-                )
-              ],
-              currentIndex: _index,
-              selectedItemColor: Theme.of(context).iconTheme.color,
-              unselectedItemColor: Theme.of(context).iconTheme.color,
-              unselectedIconTheme: IconThemeData(
-                color: Theme.of(context).iconTheme.color.withAlpha(100),
+          duration: Duration(milliseconds: 300),
+          height: _isVisible ? 80.0 : 0.0,
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: new CircularBottomNavigation(
+            [
+              new TabItem(
+                FontAwesomeIcons.calendarDay,
+                'Day',
+                Colors.green,
+                labelStyle: GoogleFonts.roboto().copyWith(color: Colors.green),
               ),
-              unselectedLabelStyle: TextStyle(
-                color: Theme.of(context).iconTheme.color.withAlpha(100),
+              new TabItem(
+                FontAwesomeIcons.calendarWeek,
+                'Week',
+                Colors.green,
+                labelStyle: GoogleFonts.roboto().copyWith(color: Colors.green),
               ),
-            )
-          ],
-        ),
-      ),
+              new TabItem(
+                FontAwesomeIcons.doorOpen,
+                'Aule Libere',
+                Colors.green,
+                labelStyle: GoogleFonts.roboto().copyWith(color: Colors.green),
+              )
+            ],
+            selectedPos: _navigationController.value,
+            selectedCallback: _handleSelected,
+            selectedIconColor: Theme.of(context).scaffoldBackgroundColor,
+            normalIconColor: Colors.green,
+            barBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            circleSize: 50.0,
+            barHeight: 60.0,
+            iconsSize: 19.0,
+            controller: _navigationController,
+          )),
     );
   }
 }
-
-// TODO: filtro lezioni
