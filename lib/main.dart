@@ -43,7 +43,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return _theme != null
         ? ChangeNotifierProvider<ThemeChanger>(
-            builder: (_) => ThemeChanger(_theme),
+            create: (_) => ThemeChanger(_theme),
             child: new MyAppWithTheme(),
           )
         : new MaterialApp(home: Loading());

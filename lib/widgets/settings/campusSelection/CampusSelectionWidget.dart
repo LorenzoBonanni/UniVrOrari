@@ -2,26 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 
 class CampusSelectionWidget extends StatefulWidget {
-  var _campuses;
+  final _campuses;
 
   CampusSelectionWidget(this._campuses);
 
   @override
   CampusSelectionWidgetState createState() =>
-      CampusSelectionWidgetState(this._campuses);
+      CampusSelectionWidgetState();
 }
 
 class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
-  var _campuses;
   bool _setted = false;
   Widget _hint;
   List<DropdownMenuItem<String>> _items;
 
-  CampusSelectionWidgetState(this._campuses);
+  CampusSelectionWidgetState();
 
   generateItems() async {
     List<DropdownMenuItem<String>> items = [];
-    for (var campus in this._campuses) {
+    for (var campus in widget._campuses) {
       items.add(
         new DropdownMenuItem<String>(
           value: campus["label"],
@@ -37,7 +36,7 @@ class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
 
   void dropDownChanged(label) {
     // get map where value correspond to selected value
-    var map = this._campuses.where((c) => c["label"] == label).toList();
+    var map = widget._campuses.where((c) => c["label"] == label).toList();
     map = map[0];
     setState(() {
       _hint = new Text(map["label"]);

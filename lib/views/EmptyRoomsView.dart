@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
-import 'package:school_timetable/widgets/EmptyRoom/EmptyRoomCard.dart';
-import 'package:school_timetable/widgets/Loading.dart';
-import 'package:school_timetable/widgets/lessonsViews/NoRoomAvailable.dart';
+import 'package:school_timetable/widgets/EmptyRoom/EmptyRoomCampus.dart';
 
 class EmptyRoomsView extends StatefulWidget {
 
@@ -17,53 +15,16 @@ class EmptyRoomsView extends StatefulWidget {
 
 class EmptyRoomsViewState extends State<EmptyRoomsView> {
   var _campuses;
-  var _widgets = [];
-
-  getEmptyRooms(id) async {
-    var rooms = await DataGetter.getEmptyRooms(id);
-    var emptyRooms = rooms.where((r) => r["isFree"] == true).toList();
-    return emptyRooms;
-  }
-
-  getWidgets(id, rooms) {
-    var widgets = [];
-    var campusMap = _campuses.where((c) => c["valore"] == id).toList()[0];
-    String campusName = campusMap["label"];
-    widgets.add(
-        Text(
-          campusName,
-          style: Theme.of(context).textTheme.display2.copyWith(fontSize: 18)
-        )
-    );
-    widgets.add(
-        rooms.isNotEmpty
-            ? new EmptyRoomCard(rooms)
-            : new NoRoomAvailable()
-    );
-    return widgets;
-  }
-
+  var _campusIds = [];
 
   @override
   void initState() {
-    DataGetter.getCampuses().then((campuses){
-      _campuses = campuses;
-
+    DataGetter.getCampuses().then((campuses) async {
       // retrieve selected campuses and for each one build its widgets
-      SettingUtils.getCampusList().then((campusIds){
-
-        // forEach selectedId retrieve its empty rooms
-        for (var id in campusIds) {
-
-          // retrieve EmptyRooms for selected Campus
-          getEmptyRooms(id).then((rooms) {
-            var widgets = _widgets;
-            widgets.addAll(getWidgets(id, rooms));
-            setState(() {
-              _widgets = widgets;
-            });
-          });
-        }
+      var campusIds =  await SettingUtils.getCampusList();
+      setState(() {
+        _campuses = campuses;
+        _campusIds = campusIds;
       });
     });
     super.initState();
@@ -71,11 +32,15 @@ class EmptyRoomsViewState extends State<EmptyRoomsView> {
 
   @override
   Widget build(BuildContext context) {
-    return _widgets.isNotEmpty
-        ? new ListView.builder(
-            itemCount: _widgets.length,
-            itemBuilder: (context, index) => _widgets[index]
-          )
-        : Loading();
+    return new ListView.builder(
+        itemCount: _campusIds.length,
+        itemBuilder: (context, index) {
+          var id = _campusIds[index];
+          return EmptyRoomCampus(
+            campuses: this._campuses,
+            id: id
+          );
+        }
+    );
   }
 }

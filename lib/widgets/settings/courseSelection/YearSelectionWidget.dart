@@ -41,8 +41,8 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
     createItems().whenComplete(() {
       // get the array containing year code and label
       var yearArr = _years.where((y) => y[0] == value).toList()[0];
-      SettingUtils.setData("anno", yearArr[1]);
       SettingUtils.setData("corso", null);
+      SettingUtils.setData("anno", yearArr[1]);
     });
     Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: CourseSelectionScreen()));
   }

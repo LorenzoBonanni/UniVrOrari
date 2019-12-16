@@ -2,35 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EmptyRoomText extends StatefulWidget {
-  var _roomData;
+  final _roomData;
 
   EmptyRoomText(this._roomData);
 
   @override
   State<StatefulWidget> createState() {
-    return new EmptyRoomTextState(_roomData);
+    return new EmptyRoomTextState();
   }
 }
 
 class EmptyRoomTextState extends State<EmptyRoomText> {
-  var _roomData;
   String _roomName;
   String _until;
-
-  EmptyRoomTextState(this._roomData);
 
   @override
   void initState() {
     setState(() {
-      _roomName = _roomData["name"];
+      _roomName = widget._roomData["name"];
     });
-    if (_roomData["until"] == 0) {
+    if (widget._roomData["until"] == 0) {
       setState(() {
         _until = " fino a Chiusura";
       });
     } else {
       DateTime datetime =
-          new DateTime.fromMillisecondsSinceEpoch(_roomData["until"] * 1000);
+          new DateTime.fromMillisecondsSinceEpoch(widget._roomData["until"] * 1000);
       String time = new DateFormat("HH:mm").format(datetime).toString();
       setState(() {
         _until = " fino alle " + time;

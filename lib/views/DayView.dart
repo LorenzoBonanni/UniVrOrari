@@ -2,48 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
 class DayView extends StatefulWidget {
-  String _firstDay;
-  var _lessons;
-  var _now;
+  final String _firstDay;
+  final _lessons;
+  final _now;
 
-  DayView(firstDay, lessons, now) {
-    this._firstDay = firstDay;
-    this._lessons = lessons;
-    this._now = now;
-  }
+  DayView(this._firstDay, this._lessons, this._now);
 
   @override
   State<StatefulWidget> createState() {
-    return new DayViewState(_firstDay, _lessons, _now);
+    return new DayViewState();
   }
 }
 
 class DayViewState extends State<DayView> {
   List<Widget> _lessonsWidgets = [];
-  String _firstDay;
-  var _lessons;
-  DateTime _now;
-
-  DayViewState(firstDay, lessons, now) {
-    this._firstDay = firstDay;
-    this._lessons = lessons;
-    this._now = now;
-  }
 
   @override
   Widget build(BuildContext context) {
     _lessonsWidgets = [];
-    List<String> splittedFirstDay = this._firstDay.split("/");
+    List<String> splittedFirstDay = widget._firstDay.split("/");
     DateTime firstDay = DateTime(
       int.parse(splittedFirstDay[2]),
       int.parse(splittedFirstDay[1]),
       int.parse(splittedFirstDay[0]),
     );
     // days between first day and now
-    var dayDifference = this._now.difference(firstDay).inDays;
+    var dayDifference = widget._now.difference(firstDay).inDays;
 
     // lesson cards
-    this._lessons.forEach((lesson) {
+    widget._lessons.forEach((lesson) {
       if (int.parse(lesson["giorno"]) == dayDifference + 1) {
         this._lessonsWidgets.add(
           new LessonCard(
@@ -52,7 +39,7 @@ class DayViewState extends State<DayView> {
             lesson["aula"],
             lesson["ora_inizio"],
             lesson["ora_fine"],
-            _now,
+              widget._now,
             true
           ),
         );

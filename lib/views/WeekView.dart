@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
 // ignore: must_be_immutable
@@ -21,12 +22,18 @@ class WeekView extends StatelessWidget {
         if (currentDayName != dayName) {
           currentDayName = dayName;
           this._lessonsWidgets.add(
+            // cinzelDecorative
+            // bubblegumSans(alternative)
             new Text(
                   dayName,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Theme.of(context).primaryColor),
+                  style: GoogleFonts.cinzelDecorative(
+                      textStyle: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Theme.of(context).primaryColor
+                      ),
+                  ),
+              textAlign: TextAlign.center,
               ),
           );
         }
@@ -44,7 +51,6 @@ class WeekView extends StatelessWidget {
         );
       }
     });
-
 
     return new ListView.builder(
         itemCount: _lessonsWidgets.length,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:school_timetable/screens/CourseSelectionScreen.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
-import 'package:school_timetable/utils/FadeRoute.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 
 class CourseSelectionWidget extends StatefulWidget {
@@ -77,7 +76,6 @@ class CourseSelectionWidgetState extends State<CourseSelectionWidget> {
     Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
         new MaterialButton(onPressed: null)
     );
-
 
     return Column(
       children: <Widget>[

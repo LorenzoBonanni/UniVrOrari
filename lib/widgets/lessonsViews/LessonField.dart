@@ -2,24 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LessonField extends StatelessWidget {
-  String _text;
-  var _icon;
+  final String _text;
+  final IconData _icon;
+  final bool deactivated;
 
-  LessonField(fieldName, this._text , this._icon);
+  LessonField(this._text , this._icon, this.deactivated);
 
   @override
   Widget build(BuildContext context) {
+    Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
+        new MaterialButton(onPressed: null)
+    );
+    Color color = this.deactivated ? disabledColor : Theme.of(context).textTheme.display1.color;
+    Color iconColor = this.deactivated ? disabledColor : Theme.of(context).iconTheme.color;
+
     return Padding(
       padding: const EdgeInsets.only(left: 3.0, top: 2.0),
       child: new Row(
         children: <Widget>[
-          new Icon(this._icon),
+          new Icon(this._icon, color: iconColor),
           SizedBox(width: 4),
           Expanded(
               child: new Text(
             _text,
             style: GoogleFonts.workSans(
-              textStyle: Theme.of(context).textTheme.display1,
+              textStyle: Theme.of(context).textTheme.display1.copyWith(color: color),
             ),
           ))
         ],

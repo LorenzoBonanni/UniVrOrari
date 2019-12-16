@@ -33,7 +33,13 @@ class EmptyRoomCardState extends State<EmptyRoomCard> {
   @override
   Widget build(BuildContext context) {
     return this._widgets.isNotEmpty
-        ? new Card(child: new Column(children: _widgets, crossAxisAlignment: CrossAxisAlignment.start))
+        ? new Card(
+          child: new Column(
+            children: _widgets,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+        ),
+    )
         : new Card(child: new Text(""));
   }
 }
