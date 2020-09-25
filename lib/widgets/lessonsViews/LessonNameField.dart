@@ -13,6 +13,18 @@ class LessonNameField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double size;
+    if(MediaQuery.of(context).size.width <= 480) {
+      size = 17;
+    }
+    else if(MediaQuery.of(context).size.width <= 600) {
+      size = 23;
+    }
+    else if(MediaQuery.of(context).size.width <= 768) {
+      size = 28;
+    }
+
+
     Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
         new MaterialButton(onPressed: null)
     );
@@ -28,8 +40,8 @@ class LessonNameField extends StatelessWidget {
             _lezione,
             style: GoogleFonts.acme(
               textStyle: TextStyle(
-                  color: color,
-                  fontSize: 17
+                color: color,
+                fontSize: size
               ),
             ),
             maxLines: 1,

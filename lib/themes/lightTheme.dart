@@ -18,7 +18,7 @@ ThemeData lightTheme() {
   }
 
   IconThemeData _iconTheme(IconThemeData base) {
-    return base.copyWith(color: Colors.green, size: 18);
+    return base.copyWith(color: Colors.green);
   }
 
   TextTheme _textTheme(TextTheme base) {

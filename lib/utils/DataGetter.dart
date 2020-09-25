@@ -28,7 +28,7 @@ class DataGetter{
     String txtcurr = await SettingUtils.getData("txtcurr");
     var client = Client();
     Response response = await client.get(
-        "http://progetti.altervista.org/orari/api.php?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr"
+        "https://orariserver.azurewebsites.net/?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr"
     );
     return jsonDecode(response.body);
   }

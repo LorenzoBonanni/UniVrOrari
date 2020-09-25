@@ -7,6 +7,8 @@ import 'package:school_timetable/themes/darkTheme.dart';
 import 'package:school_timetable/themes/lightTheme.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 
+
+//TODO make responsive
 class SettingsScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -50,20 +52,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-            new FlatButton(
-              child: new Text(
-                "CAMBIA POLI",
-                style: TextStyle(color: Colors.green),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CampusesSelectionScreen(),
-                  ),
-                );
-              },
-            ),
+            // new FlatButton(
+            //   child: new Text(
+            //     "CAMBIA POLI",
+            //     style: TextStyle(color: Colors.green),
+            //   ),
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => CampusesSelectionScreen(),
+            //       ),
+            //     );
+            //   },
+            // ),
             new Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

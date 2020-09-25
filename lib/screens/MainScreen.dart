@@ -16,6 +16,8 @@ import 'package:school_timetable/views/DayView.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
 import 'package:school_timetable/widgets/Loading.dart';
 
+//TODO make responsive
+
 // ignore: must_be_immutable
 class MainScreen extends StatefulWidget {
   final _now;
@@ -66,54 +68,48 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     return "";
   }
 
-  nextDay() {
-    // if weekend skip to monday
-    do {
-      _now = _now.add(new Duration(days: 1));
-    } while (DateFormat('EEEE').format(_now) == "Sunday" ||
-        DateFormat('EEEE').format(_now) == "Saturday");
-
+  createNewDayWidget() {
     updateTimetable().then((_) {
       setState(() {
         _dayWidget = new DayView(_firstDay, _lessons, _now);
       });
     });
     changePage(false);
+  }
+
+  createNewWeekWidget() {
+    updateTimetable().then((_) {
+      setState(() {
+        _weekWidget = new WeekView(_lessons, _now);
+      });
+    });
+    changePage(true);
+  }
+
+  nextDay() {
+    // if weekend skip to monday
+    do {
+      _now = _now.add(new Duration(days: 1));
+    } while (DateFormat('EEEE').format(_now) == "Sunday" || DateFormat('EEEE').format(_now) == "Saturday");
+    createNewDayWidget();
   }
 
   prevDay() {
     // if weekend skip to friday
     do {
       _now = _now.subtract(new Duration(days: 1));
-    } while (DateFormat('EEEE').format(_now) == "Sunday" ||
-        DateFormat('EEEE').format(_now) == "Saturday");
-
-    MainScreenState.updateTimetable().then((_) {
-      setState(() {
-        _dayWidget = new DayView(_firstDay, _lessons, _now);
-      });
-    });
-    changePage(false);
+    } while (DateFormat('EEEE').format(_now) == "Sunday" || DateFormat('EEEE').format(_now) == "Saturday");
+    createNewDayWidget();
   }
 
   nextWeek() {
     _now = _now.add(new Duration(days: 7));
-    updateTimetable().then((_) {
-      setState(() {
-        _weekWidget = new WeekView(_lessons, _now);
-      });
-    });
-    changePage(true);
+    createNewWeekWidget();
   }
 
   prevWeek() async {
     _now = _now.subtract(new Duration(days: 7));
-    updateTimetable().then((_) {
-      setState(() {
-        _weekWidget = new WeekView(_lessons, _now);
-      });
-    });
-    changePage(true);
+    createNewWeekWidget();
   }
 
   static getDayTitle() {
@@ -160,15 +156,13 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     _scrollViewController = new ScrollController();
     _scrollViewController.addListener(() {
       // if user scroll down hide
-      if (_scrollViewController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
+      if (_scrollViewController.position.userScrollDirection == ScrollDirection.reverse) {
         setState(() {
           _isVisible = false;
         });
       }
       // if user scroll up show
-      if (_scrollViewController.position.userScrollDirection ==
-          ScrollDirection.forward) {
+      if (_scrollViewController.position.userScrollDirection == ScrollDirection.forward) {
         setState(() {
           _isVisible = true;
         });
@@ -184,12 +178,13 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
           context,
           MaterialPageRoute(builder: (context) => CourseSelectionScreen()),
         );
-      } else if (campuses.isEmpty || campuses == null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CampusesSelectionScreen()),
-        );
       }
+      // else if (campuses.isEmpty || campuses == null) {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => CampusesSelectionScreen()),
+      //   );
+      // }
     });
 
     setupScroll();
@@ -203,8 +198,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     }
 
     // if the date is weekend go to monday
-    while (DateFormat('EEEE').format(_now) == "Sunday" ||
-        DateFormat('EEEE').format(_now) == "Saturday") {
+    while (DateFormat('EEEE').format(_now) == "Sunday" || DateFormat('EEEE').format(_now) == "Saturday") {
       _now = _now.add(new Duration(days: 1));
     }
 
@@ -309,12 +303,12 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                 Colors.green,
                 labelStyle: GoogleFonts.roboto().copyWith(color: Colors.green),
               ),
-              new TabItem(
-                FontAwesomeIcons.doorOpen,
-                'Aule Libere',
-                Colors.green,
-                labelStyle: GoogleFonts.roboto().copyWith(color: Colors.green),
-              )
+//              new TabItem(
+//                FontAwesomeIcons.doorOpen,
+//                'Aule Libere',
+//                Colors.green,
+//                labelStyle: GoogleFonts.roboto().copyWith(color: Colors.green),
+//              )
             ],
             selectedPos: _navigationController.value,
             selectedCallback: _handleSelected,

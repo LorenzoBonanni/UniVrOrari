@@ -10,6 +10,17 @@ class LessonField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double size;
+    double iconSize;
+    if(MediaQuery.of(context).size.width <= 480) {
+      size = 15;
+      iconSize = 18;
+    }
+    else if(MediaQuery.of(context).size.width <= 768) {
+      size = 18;
+      iconSize = 22;
+    }
+
     Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
         new MaterialButton(onPressed: null)
     );
@@ -20,13 +31,13 @@ class LessonField extends StatelessWidget {
       padding: const EdgeInsets.only(left: 3.0, top: 2.0),
       child: new Row(
         children: <Widget>[
-          new Icon(this._icon, color: iconColor),
+          new Icon(this._icon, color: iconColor, size: iconSize,),
           SizedBox(width: 4),
           Expanded(
               child: new Text(
             _text,
             style: GoogleFonts.workSans(
-              textStyle: Theme.of(context).textTheme.display1.copyWith(color: color),
+              textStyle: Theme.of(context).textTheme.display1.copyWith(color: color, fontSize: size),
             ),
           ))
         ],
