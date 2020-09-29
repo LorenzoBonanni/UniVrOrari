@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:school_timetable/screens/MainScreen.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
@@ -12,7 +14,7 @@ class CourseSelectionScreen extends StatelessWidget {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Course Selection"),
+        title: new Text("Selezione Corso di Studio"),
         automaticallyImplyLeading: false,
         centerTitle: true,
       ),
@@ -34,6 +36,8 @@ class CourseSelectionScreen extends StatelessWidget {
                       ),
                     );
                   });
+
+                  SettingUtils.setData("lessons", json.encode({}));
                   SettingUtils.setSetted(true);
                 },
                 child: new Text(

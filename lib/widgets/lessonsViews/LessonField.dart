@@ -24,7 +24,7 @@ class LessonField extends StatelessWidget {
     Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
         new MaterialButton(onPressed: null)
     );
-    Color color = this.deactivated ? disabledColor : Theme.of(context).textTheme.display1.color;
+    Color color = this.deactivated ? disabledColor : Theme.of(context).textTheme.headline4.color;
     Color iconColor = this.deactivated ? disabledColor : Theme.of(context).iconTheme.color;
 
     return Padding(
@@ -37,7 +37,7 @@ class LessonField extends StatelessWidget {
               child: new Text(
             _text,
             style: GoogleFonts.workSans(
-              textStyle: Theme.of(context).textTheme.display1.copyWith(color: color, fontSize: size),
+              textStyle: Theme.of(context).textTheme.headline4.copyWith(color: color, fontSize: size),
             ),
           ))
         ],

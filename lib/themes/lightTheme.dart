@@ -24,13 +24,13 @@ ThemeData lightTheme() {
   TextTheme _textTheme(TextTheme base) {
     return TextTheme(
       // bordeaux
-      display4: TextStyle(color: Color.fromRGBO(129, 0, 44, 100)),
+      headline1: TextStyle(color: Color.fromRGBO(129, 0, 44, 100)),
       // ottanio
-      display3: TextStyle(color: Color.fromRGBO(2, 142, 185, 100)),
+      headline2: TextStyle(color: Color.fromRGBO(2, 142, 185, 100)),
       // field name
-      display2: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15),
+      headline3: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15),
       // filed value
-      display1: TextStyle(color: Colors.black87, fontSize: 15),
+      headline4: TextStyle(color: Colors.black87, fontSize: 15),
     );
   }
 

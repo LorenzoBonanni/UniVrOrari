@@ -71,6 +71,11 @@ class CampusesSelectionScreenState extends State<CampusesSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: new AppBar(
+        title: new Text("Selezione Campus di Interesse"),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+      ),
       body: _widgets.isNotEmpty
           ? ListView.builder(
               itemCount: _widgets.length,

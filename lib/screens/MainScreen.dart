@@ -6,11 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:school_timetable/screens/CampusesSelectionScreen.dart';
 import 'package:school_timetable/screens/CourseSelectionScreen.dart';
 import 'package:school_timetable/screens/SettingScreen.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
-import 'package:school_timetable/views/EmptyRoomsView.dart';
 import 'package:school_timetable/views/WeekView.dart';
 import 'package:school_timetable/views/DayView.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
@@ -250,12 +248,12 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
         });
         break;
 
-      case 2:
-        setState(() {
-          _tabsTitle = new Text("Aule Libere");
-          _widget = new EmptyRoomsView();
-        });
-        break;
+      // case 2:
+      //   setState(() {
+      //     _tabsTitle = new Text("Aule Libere");
+      //     _widget = new EmptyRoomsView();
+      //   });
+      //   break;
     }
 
     return new Scaffold(

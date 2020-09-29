@@ -25,14 +25,14 @@ ThemeData darkTheme() {
   TextTheme _textTheme(TextTheme base) {
     return TextTheme(
         // rosa
-        display4: TextStyle(color: Color(0xfff551e7)),
+        headline1: TextStyle(color: Color(0xfff551e7)),
         // blu
-        display3: TextStyle(color: Color(0xff6ea0f5)),
+        headline2: TextStyle(color: Color(0xff6ea0f5)),
         // field name
-        display2: TextStyle(
+        headline3: TextStyle(
             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
         // filed value
-        display1: TextStyle(color: Colors.white, fontSize: 15));
+        headline4: TextStyle(color: Colors.white, fontSize: 15));
   }
 
   _tabBarTheme(TabBarTheme base) {

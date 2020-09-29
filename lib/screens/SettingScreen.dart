@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:school_timetable/blocs/theme.dart';
 import 'package:school_timetable/screens/CampusesSelectionScreen.dart';
 import 'package:school_timetable/screens/CourseSelectionScreen.dart';
+import 'package:school_timetable/screens/SubjectSelectionScreen.dart';
 import 'package:school_timetable/themes/darkTheme.dart';
 import 'package:school_timetable/themes/lightTheme.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
@@ -33,7 +34,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text("Settings"),
+          title: new Text("Impostazioni"),
           centerTitle: true,
         ),
         body: new ListView(
@@ -48,6 +49,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CourseSelectionScreen(),
+                  ),
+                );
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "FILTRA LEZIONI",
+                style: TextStyle(color: Colors.green),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SubjectSelectionScreen(),
                   ),
                 );
               },
@@ -70,8 +85,8 @@ class SettingsScreenState extends State<SettingsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Text(
-                  "DarkMode",
-                  style: Theme.of(context).textTheme.display2,
+                  "DARKMODE",
+                  style: TextStyle(color: Colors.green),
                 ),
                 Center(
                   child: new Switch(

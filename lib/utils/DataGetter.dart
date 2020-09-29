@@ -1,9 +1,25 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:school_timetable/utils/SettingUtils.dart'; // Contains a client for making API calls
 
 class DataGetter{
+
+  static Future<String> _getUrl(String endpoint, date) async {
+    String year = await SettingUtils.getData("anno");
+    String course = await SettingUtils.getData("corso");
+    String year2 = await SettingUtils.getData("anno2");
+    String txtcurr = await SettingUtils.getData("txtcurr");
+    String url = "https://orariserver.azurewebsites.net$endpoint?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr";
+    return url;
+  }
+
+  static Future getTimetable(date) async {
+    String url = await _getUrl("/", date);
+    var client = Client();
+    Response response = await client.get(url);
+    return jsonDecode(response.body);
+  }
+
   static Future getYears() async {
     var client = Client();
     Response response = await client.get(
@@ -16,19 +32,6 @@ class DataGetter{
     var client = Client();
     Response response = await client.get(
         "http://westcost0.altervista.org/orari/api.php?w=getcourses&year=$year"
-    );
-
-    return jsonDecode(response.body);
-  }
-
-  static Future getTimetable(date) async {
-    String year = await SettingUtils.getData("anno");
-    String course = await SettingUtils.getData("corso");
-    String year2 = await SettingUtils.getData("anno2");
-    String txtcurr = await SettingUtils.getData("txtcurr");
-    var client = Client();
-    Response response = await client.get(
-        "https://orariserver.azurewebsites.net/?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr"
     );
     return jsonDecode(response.body);
   }
@@ -45,6 +48,13 @@ class DataGetter{
 
   static Future getEmptyRooms(String id) async {
     var url = "http://progetti.altervista.org/orari/aule.php" + "?id=" + id;
+    var client = Client();
+    Response response = await client.get(url);
+    return jsonDecode(response.body);
+  }
+
+  static Future getSubjects(date) async{
+    String url = await _getUrl("/subjects", date);
     var client = Client();
     Response response = await client.get(url);
     return jsonDecode(response.body);
