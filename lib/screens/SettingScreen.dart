@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:school_timetable/blocs/theme.dart';
 import 'package:school_timetable/screens/CourseSelectionScreen.dart';
 import 'package:school_timetable/screens/CourseSelectionScreenExtra.dart';
+import 'package:school_timetable/screens/MainScreen.dart';
 import 'package:school_timetable/screens/SubjectSelectionScreen.dart';
 import 'package:school_timetable/themes/darkTheme.dart';
 import 'package:school_timetable/themes/lightTheme.dart';
@@ -34,8 +35,16 @@ class SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return new Scaffold (
         appBar: new AppBar(
+          leading: BackButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MainScreen())
+              );
+            },
+          ),
           title: new Text("Impostazioni"),
           centerTitle: true,
         ),

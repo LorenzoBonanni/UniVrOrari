@@ -70,7 +70,6 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     });
     return lezioni;
   }
-
   // retrieve data and update timetable variables
   static updateTimetable() async {
     var date = new DateFormat("dd-MM-yyyy").format(_now);
@@ -162,7 +161,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
 
   void changePage(bool changeTab) {
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         PageTransition(
             type: PageTransitionType.fade,
@@ -291,9 +290,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                   IconButton(
                     icon: new Icon(
                       Icons.settings,
-                      // color: Theme.of(context).appBarTheme.textTheme.title.color,
                     ),
-                    onPressed: () => Navigator.push(
+                    onPressed: () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SettingsScreen()),
                     ),
