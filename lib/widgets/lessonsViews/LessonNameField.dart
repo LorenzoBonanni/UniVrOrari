@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LessonNameField extends StatelessWidget {
-  final _lezione;
+  final String _lezione;
   final Color _lessonColor;
   final bool deactivated;
 

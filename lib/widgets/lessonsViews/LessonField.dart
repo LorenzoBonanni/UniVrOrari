@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LessonField extends StatelessWidget {
-  final String _text;
+  String _text;
   final IconData _icon;
   final bool deactivated;
 
@@ -10,6 +10,7 @@ class LessonField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _text = _text.replaceAll("Ã", "à");
     double size;
     double iconSize;
     if(MediaQuery.of(context).size.width <= 480) {
