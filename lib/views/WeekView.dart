@@ -36,7 +36,7 @@ class _WeekViewState extends State<WeekView> {
       });
     });
 
-    this.widget._lessons.forEach((lesson) {
+    widget._lessons.forEach((lesson) {
       if (lesson["nome_insegnamento"] != null && !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
         String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
         if (currentDayName != dayName) {

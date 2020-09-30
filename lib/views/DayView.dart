@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:school_timetable/utils/SettingUtils.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
+
+// TODO: Implement Lesson Filter
 
 class DayView extends StatefulWidget {
   final String _firstDay;
@@ -16,6 +21,7 @@ class DayView extends StatefulWidget {
 
 class DayViewState extends State<DayView> {
   List<Widget> _lessonsWidgets = [];
+  List<String> _filteredSubjects = [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +35,17 @@ class DayViewState extends State<DayView> {
     // days between first day and now
     var dayDifference = widget._now.difference(firstDay).inDays;
 
+    SettingUtils.getData("lessons").then((lessons){
+      Map<String, dynamic> l = json.decode(lessons);
+      l.removeWhere((key, value) => value == true);
+      setState(() {
+        _filteredSubjects.addAll(l.keys);
+      });
+    });
+
     // lesson cards
     widget._lessons.forEach((lesson) {
-      if (int.parse(lesson["giorno"]) == dayDifference + 1) {
+      if (int.parse(lesson["giorno"]) == dayDifference + 1 && !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
         this._lessonsWidgets.add(
           new LessonCard(
             lesson["nome_insegnamento"],
