@@ -56,11 +56,32 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     }
   }
 
+  static sortTimetable(List<dynamic> lezioni) {
+    lezioni.sort((l1, l2){
+      l1 = l1["ora_inizio"].split(":");
+      l2 = l2["ora_inizio"].split(":");
+      var l1H = l1[0];
+      var l1M = l1[1];
+      var l2H = l2[0];
+      var l2M = l2[1];
+      var r = l1H.compareTo(l2H);
+      if (r != 0) return r; // 0 -> equal
+      return l1M.compareTo(l2M);
+    });
+    return lezioni;
+  }
+
   // retrieve data and update timetable variables
   static updateTimetable() async {
     var date = new DateFormat("dd-MM-yyyy").format(_now);
-    var timetable = await DataGetter.getTimetable(date);
-    _lessons = timetable["lezioni"];
+    Map<String, dynamic> timetable = await DataGetter.getTimetable(date);
+    Map<String, dynamic> timetableExtra = await DataGetter.getTimetableExtra(date);
+    timetable["lezioni"].forEach((e) => e["extra"] = false);
+    timetableExtra["lezioni"].forEach((e) => e["extra"] = true);
+    List<dynamic> lezioni = timetable["lezioni"] + timetableExtra["lezioni"];
+    lezioni = sortTimetable(lezioni);
+
+    _lessons = lezioni;
     _firstDay = timetable["first_day"];
     _lastDay = timetable["last_day"];
     return "";

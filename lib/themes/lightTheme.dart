@@ -41,5 +41,6 @@ ThemeData lightTheme() {
     iconTheme: _iconTheme(base.iconTheme),
     textTheme: _textTheme(base.textTheme),
     primaryColor: Colors.black,
+    backgroundColor: Colors.white
   );
 }

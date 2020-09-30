@@ -21,20 +21,8 @@ class _WeekViewState extends State<WeekView> {
   List<Widget> _lessonsWidgets = [];
   List<String> _filteredSubjects = [];
 
-
-
-  @override
-  Widget build(BuildContext context) {
-    _lessonsWidgets = [];
+  void createLessonWidgets() {
     String currentDayName = "";
-
-    SettingUtils.getData("lessons").then((lessons){
-      Map<String, dynamic> l = json.decode(lessons);
-      l.removeWhere((key, value) => value == true);
-      setState(() {
-        _filteredSubjects.addAll(l.keys);
-      });
-    });
 
     widget._lessons.forEach((lesson) {
       if (lesson["nome_insegnamento"] != null && !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
@@ -63,11 +51,26 @@ class _WeekViewState extends State<WeekView> {
               lesson["aula"],
               lesson["ora_inizio"],
               lesson["ora_fine"],
+              lesson["extra"],
               widget._now,
               false
           ),
         );
       }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    this._lessonsWidgets = [];
+    createLessonWidgets();
+
+    SettingUtils.getData("lessons").then((lessons){
+      Map<String, dynamic> l = json.decode(lessons);
+      l.removeWhere((key, value) => value == true);
+      setState(() {
+        _filteredSubjects.addAll(l.keys);
+      });
     });
 
     return new ListView.builder(

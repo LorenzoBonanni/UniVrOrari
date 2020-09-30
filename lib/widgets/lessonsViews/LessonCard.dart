@@ -8,6 +8,7 @@ class LessonCard extends StatelessWidget {
   final String _lezione;
   final String _docente;
   final String _aula;
+  final bool _extra;
   final String _inizio;
   final String _fine;
   final DateTime _now;
@@ -15,7 +16,7 @@ class LessonCard extends StatelessWidget {
   bool _vacanza = false;
   var _lessonColor;
 
-  LessonCard(this._lezione, this._docente, this._aula, this._inizio, this._fine, this._now, this._flag) {
+  LessonCard(this._lezione, this._docente, this._aula, this._inizio, this._fine, this._extra, this._now, this._flag) {
     if (
         _lezione == null ||
         _docente == null ||
@@ -35,12 +36,11 @@ class LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // select lesson name color
-    if (!_vacanza && this._lezione.contains("dispari")) {
-      this._lessonColor = Theme.of(context).textTheme.display4.color;
-    } else {
-      this._lessonColor = Theme.of(context).textTheme.display3.color;
+    if (!_vacanza && this._extra) { // extra
+      this._lessonColor = Theme.of(context).textTheme.headline1.color;
+    } else { // normale
+      this._lessonColor = Theme.of(context).textTheme.headline2.color;
     }
 
     if (this._vacanza) {

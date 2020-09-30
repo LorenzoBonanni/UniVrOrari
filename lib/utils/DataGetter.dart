@@ -13,8 +13,24 @@ class DataGetter{
     return url;
   }
 
+  static Future<String> _getUrlExtra(String endpoint, date) async {
+    String year = await SettingUtils.getData("annoExtra");
+    String course = await SettingUtils.getData("corsoExtra");
+    String year2 = await SettingUtils.getData("anno2Extra");
+    String txtcurr = await SettingUtils.getData("txtcurrExtra");
+    String url = "https://orariserver.azurewebsites.net$endpoint?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr";
+    return url;
+  }
+
   static Future getTimetable(date) async {
     String url = await _getUrl("/", date);
+    var client = Client();
+    Response response = await client.get(url);
+    return jsonDecode(response.body);
+  }
+
+  static Future getTimetableExtra(date) async {
+    String url = await _getUrlExtra("/", date);
     var client = Client();
     Response response = await client.get(url);
     return jsonDecode(response.body);
@@ -55,8 +71,13 @@ class DataGetter{
 
   static Future getSubjects(date) async{
     String url = await _getUrl("/subjects", date);
+    String urlExtra = await _getUrlExtra("/subjects", date);
     var client = Client();
     Response response = await client.get(url);
-    return jsonDecode(response.body);
+    Response responseExtra = await client.get(urlExtra);
+    return [
+      jsonDecode(response.body),
+      jsonDecode(responseExtra.body)
+    ];
   }
 }

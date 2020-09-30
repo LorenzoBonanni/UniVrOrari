@@ -46,5 +46,6 @@ ThemeData darkTheme() {
       iconTheme: _iconTheme(base.iconTheme),
       textTheme: _textTheme(base.textTheme),
       tabBarTheme: _tabBarTheme(base.tabBarTheme),
-      primaryColor: Colors.white);
+      primaryColor: Colors.white
+  );
 }

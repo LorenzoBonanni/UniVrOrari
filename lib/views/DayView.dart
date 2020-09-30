@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
-// TODO: Implement Lesson Filter
-
 class DayView extends StatefulWidget {
   final String _firstDay;
   final _lessons;
@@ -36,11 +34,13 @@ class DayViewState extends State<DayView> {
     var dayDifference = widget._now.difference(firstDay).inDays;
 
     SettingUtils.getData("lessons").then((lessons){
-      Map<String, dynamic> l = json.decode(lessons);
-      l.removeWhere((key, value) => value == true);
-      setState(() {
-        _filteredSubjects.addAll(l.keys);
-      });
+      if (lessons != null) {
+        Map<String, dynamic> l = json.decode(lessons);
+        l.removeWhere((key, value) => value == true);
+        setState(() {
+          _filteredSubjects.addAll(l.keys);
+        });
+      }
     });
 
     // lesson cards
@@ -53,8 +53,9 @@ class DayViewState extends State<DayView> {
             lesson["aula"],
             lesson["ora_inizio"],
             lesson["ora_fine"],
-              widget._now,
-            true
+            lesson["extra"],
+            widget._now,
+            true,
           ),
         );
       }
