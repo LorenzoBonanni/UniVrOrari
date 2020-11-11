@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
+import 'package:school_timetable/widgets/Loading.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
 class DayView extends StatefulWidget {
   final String _firstDay;
-  final _lessons;
+  final List<dynamic> _lessons;
   final _now;
 
   DayView(this._firstDay, this._lessons, this._now);
@@ -18,12 +19,29 @@ class DayView extends StatefulWidget {
 }
 
 class DayViewState extends State<DayView> {
-  List<Widget> _lessonsWidgets = [];
   List<String> _filteredSubjects = [];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _lessonsWidgets = [];
+    List<dynamic> lessons = widget._lessons;
+    SettingUtils.getData("lessons").then((filteredLessons) {
+      if (filteredLessons != null) {
+        Map<String, dynamic> fl = json.decode(filteredLessons);
+        fl.removeWhere((key, value) => value == true);
+        if (fl.isNotEmpty) {
+          lessons.removeWhere((lesson) => fl.keys.contains(lesson["nome_insegnamento"]));
+          setState(() {
+            _filteredSubjects.addAll(fl.keys);
+          });
+        }
+      }
+    });
+
     List<String> splittedFirstDay = widget._firstDay.split("/");
     DateTime firstDay = DateTime(
       int.parse(splittedFirstDay[2]),
@@ -32,38 +50,24 @@ class DayViewState extends State<DayView> {
     );
     // days between first day and now
     var dayDifference = widget._now.difference(firstDay).inDays;
-
-    SettingUtils.getData("lessons").then((lessons){
-      if (lessons != null) {
-        Map<String, dynamic> l = json.decode(lessons);
-        l.removeWhere((key, value) => value == true);
-        setState(() {
-          _filteredSubjects.addAll(l.keys);
-        });
-      }
-    });
-
-    // lesson cards
-    widget._lessons.forEach((lesson) {
-      if (int.parse(lesson["giorno"]) == dayDifference + 1 && !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
-        this._lessonsWidgets.add(
-          new LessonCard(
-            lesson["nome_insegnamento"],
-            lesson["docente"],
-            lesson["aula"],
-            lesson["ora_inizio"],
-            lesson["ora_fine"],
-            lesson["extra"],
-            widget._now,
-            true,
-          ),
-        );
-      }
-    });
-
-    return ListView.builder(
-        itemCount: _lessonsWidgets.length,
-        itemBuilder: (context, index) => _lessonsWidgets[index]
-    );
+    if (lessons.isNotEmpty) {
+      lessons.removeWhere((l) => int.parse(l["giorno"]) != dayDifference + 1);
+      return ListView.builder(
+          itemCount: lessons.length,
+          itemBuilder: (context, index) {
+            return new LessonCard(
+              lessons[index]["nome_insegnamento"],
+              lessons[index]["docente"],
+              lessons[index]["aula"],
+              lessons[index]["ora_inizio"],
+              lessons[index]["ora_fine"],
+              lessons[index]["extra"],
+              widget._now,
+              true,
+            );
+          }
+      );
+    }
+    return Loading();
   }
 }
