@@ -7,7 +7,7 @@ ThemeData lightTheme() {
       color: Color(0xfffafafa),
       iconTheme: new IconThemeData(color: Colors.green),
       textTheme: new TextTheme(
-        title: GoogleFonts.raleway(textStyle: TextStyle (
+        headline6: GoogleFonts.raleway(textStyle: TextStyle (
             fontWeight: FontWeight.bold,
             fontSize: 20,
             color: Colors.green,

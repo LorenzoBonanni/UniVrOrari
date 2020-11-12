@@ -26,7 +26,7 @@ class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
           value: campus["label"],
           child: new Text(
             campus["label"],
-            style: TextStyle(color: Theme.of(context).textTheme.display1.color),
+            style: TextStyle(color: Theme.of(context).textTheme.headline4.color),
           ),
         ),
       );
@@ -66,7 +66,7 @@ class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
             isExpanded: true,
             items: this._items,
             onChanged: !_setted ? dropDownChanged : null,
-            style: Theme.of(context).textTheme.display1
+            style: Theme.of(context).textTheme.headline4
           )
         : DropdownButton(items: [], onChanged: null);
   }

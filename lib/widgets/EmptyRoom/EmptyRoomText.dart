@@ -41,8 +41,8 @@ class EmptyRoomTextState extends State<EmptyRoomText> {
     return _roomName != null && _until != null
         ? new Wrap(
             children: <Widget>[
-              new Text(_roomName, style: Theme.of(context).textTheme.display2),
-              new Text(_until, style: Theme.of(context).textTheme.display1)
+              new Text(_roomName, style: Theme.of(context).textTheme.headline3),
+              new Text(_until, style: Theme.of(context).textTheme.headline4)
             ],
           )
         : new Text("empty", style: new TextStyle(color: Colors.black));

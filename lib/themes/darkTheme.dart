@@ -7,7 +7,7 @@ ThemeData darkTheme() {
       color: Color(0xff303030),
       iconTheme: new IconThemeData(color: Colors.white),
       textTheme: new TextTheme(
-        title: GoogleFonts.raleway(
+        headline6: GoogleFonts.raleway(
           textStyle: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,

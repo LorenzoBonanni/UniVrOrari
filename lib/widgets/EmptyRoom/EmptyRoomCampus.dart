@@ -40,7 +40,7 @@ class _EmptyRoomCampusState extends State<EmptyRoomCampus> {
       children: <Widget>[
         Text(
             campusName,
-            style: Theme.of(context).textTheme.display2.copyWith(fontSize: 18)
+            style: Theme.of(context).textTheme.headline3.copyWith(fontSize: 18)
         ),
         _rooms != null
             ? _rooms.isNotEmpty
