@@ -28,7 +28,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
                     value: year[0],
                     child: new Text(year[0],
                         style: TextStyle(
-                            color: Theme.of(context).textTheme.display1.color
+                            color: Theme.of(context).textTheme.headline4.color
                         ),
                     ),
                   ),
@@ -78,7 +78,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
           "Anno Accademico",
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.display1.color
+              color: Theme.of(context).textTheme.headline4.color
           ),
         ),
         Padding(
@@ -88,7 +88,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
               hint: new Text(
                 _hint,
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.display1.color
+                    color: Theme.of(context).textTheme.headline4.color
                 ),
               ),
               disabledHint: new Text(

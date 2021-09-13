@@ -14,8 +14,6 @@ import 'package:school_timetable/views/DayView.dart';
 import 'package:school_timetable/utils/DataGetter.dart';
 import 'package:school_timetable/widgets/Loading.dart';
 
-//TODO make responsive
-
 // ignore: must_be_immutable
 class MainScreen extends StatefulWidget {
   final _now;
@@ -83,20 +81,20 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     _lessons = lezioni;
     _firstDay = timetable["first_day"];
     _lastDay = timetable["last_day"];
-    return "";
+    return [lezioni, timetable["first_day"], timetable["last_day"]];
   }
 
   createNewDayWidget() {
-    updateTimetable().then((_) {
+    updateTimetable().then(([lezioni, firstDay, lastDay]) {
       setState(() {
-        _dayWidget = new DayView(_firstDay, _lessons, _now);
+        _dayWidget = new DayView(firstDay, lezioni, _now);
       });
     });
     changePage(false);
   }
 
   createNewWeekWidget() {
-    updateTimetable().then((_) {
+    updateTimetable().then(([lezioni, firstDay, lastDay]) {
       setState(() {
         _weekWidget = new WeekView(_lessons, _now);
       });

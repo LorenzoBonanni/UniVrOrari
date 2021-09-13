@@ -32,7 +32,7 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
           child: new Text(year2Map["label"],
               style: new TextStyle(
                   fontSize: 10,
-                  color: Theme.of(context).textTheme.display1.color
+                  color: Theme.of(context).textTheme.headline4.color
               )
           ),
         ),
@@ -92,7 +92,7 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
           "Anno di Studio ",
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.display1.color),
+              color: Theme.of(context).textTheme.headline4.color),
         ),
         Padding(
             padding: const EdgeInsets.all(8.0),
@@ -101,7 +101,7 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
                 hint: new Text(
                   _hint,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.display1.color,
+                    color: Theme.of(context).textTheme.headline4.color,
                   ),
                 ),
                 disabledHint: new Text(

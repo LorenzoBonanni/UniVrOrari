@@ -5,7 +5,7 @@ class NoRoomAvailable extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Card(
       child: new Text("Nessuna Aula Disponibie",
-          style: Theme.of(context).textTheme.display2),
+          style: Theme.of(context).textTheme.headline3),
     );
   }
 }
