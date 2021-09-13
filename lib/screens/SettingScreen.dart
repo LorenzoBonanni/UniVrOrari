@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:school_timetable/blocs/theme.dart';
@@ -90,12 +89,12 @@ class SettingsScreenState extends State<SettingsScreen> {
                     SettingUtils.setData("anno2Extra", null);
                     SettingUtils.setData("txt_currExtra", null);
                     SettingUtils.setData("lessons", json.encode({}));
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: new Text(
                               "Corso Extra Eliminato",
                               style: TextStyle(
-                                  color: Theme.of(context).textTheme.headline4.color
+                                  color: Theme.of(context).textTheme.headline4!.color
                               ),
                             ),
                           backgroundColor: Theme.of(context).backgroundColor,
@@ -104,7 +103,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                   },
                 )
             ),
-            new FlatButton(
+            new TextButton(
               child: new Text(
                 "FILTRA LEZIONI",
                 style: TextStyle(color: Colors.green),

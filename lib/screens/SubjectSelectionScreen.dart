@@ -50,7 +50,7 @@ class _SubjectSelectionScreenState extends State<SubjectSelectionScreen> {
                 children: [
                   new Text(
                       "Seleziona le lezioni di Interesse",
-                      style: TextStyle(color: Theme.of(context).textTheme.headline4.color),
+                      style: TextStyle(color: Theme.of(context).textTheme.headline4!.color),
                   ),
                   Expanded(
                     child: ListView.builder(
@@ -58,7 +58,7 @@ class _SubjectSelectionScreenState extends State<SubjectSelectionScreen> {
                         itemBuilder: (context, index) => new SubjectSelectionWidget(_subjects[index])
                     ),
                   ),
-                  new FlatButton(
+                  new TextButton(
                       onPressed: finishCallback,
                       child: new Text("FINE", style: new TextStyle(color: Colors.green))
                   )

@@ -27,7 +27,7 @@ class CourseSelectionWidgetStateExtra extends State<CourseSelectionWidgetExtra> 
             course[0],
             style: new TextStyle(
                 fontSize: 10,
-                color: Theme.of(context).textTheme.headline4.color
+                color: Theme.of(context).textTheme.headline4!.color
             ),
           ),
         ),
@@ -81,7 +81,7 @@ class CourseSelectionWidgetStateExtra extends State<CourseSelectionWidgetExtra> 
       children: <Widget>[
         Text(
           "Nome Corso",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.headline4.color),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.headline4!.color),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -91,7 +91,7 @@ class CourseSelectionWidgetStateExtra extends State<CourseSelectionWidgetExtra> 
             hint: new Text(
               _hint,
               style: TextStyle(
-                color: Theme.of(context).textTheme.headline4.color,
+                color: Theme.of(context).textTheme.headline4!.color,
               ),
             ),
             disabledHint: new Text(

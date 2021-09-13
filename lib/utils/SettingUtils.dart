@@ -7,7 +7,7 @@ class SettingUtils {
   static Future<String> getData(key) async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString(key);
-    return value;
+    return value != null ? value : "";
   }
 
   static setData(key, value) async {
@@ -23,7 +23,8 @@ class SettingUtils {
 
   static Future<bool> getSetted() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('setted');
+    var value = prefs.getBool('setted');
+    return value != null ? value : false;
   }
 
   static setCampusList(String value) async {
@@ -32,7 +33,8 @@ class SettingUtils {
 
   static Future<List<String>> getCampusList() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList("campuses");
+    var val = prefs.getStringList("campuses");
+    return val != null ? val : List.empty();
   }
 
   static updateCampusList() async {

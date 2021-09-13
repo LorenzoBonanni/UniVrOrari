@@ -13,7 +13,7 @@ class LessonNameField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double size;
+    double size = 0;
     if(MediaQuery.of(context).size.width <= 480) {
       size = 17;
     }
@@ -29,7 +29,7 @@ class LessonNameField extends StatelessWidget {
         new MaterialButton(onPressed: null)
     );
     Color color = this.deactivated ? disabledColor : _lessonColor;
-    Color iconColor = this.deactivated ? disabledColor : Theme.of(context).iconTheme.color;
+    Color iconColor = (this.deactivated ? disabledColor : Theme.of(context).iconTheme.color) as Color;
 
     return Row(
       children: <Widget>[

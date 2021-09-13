@@ -38,9 +38,9 @@ class LessonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // select lesson name color
     if (!_vacanza && this._extra) { // extra
-      this._lessonColor = Theme.of(context).textTheme.headline1.color;
+      this._lessonColor = Theme.of(context).textTheme.headline1!.color;
     } else { // normale
-      this._lessonColor = Theme.of(context).textTheme.headline2.color;
+      this._lessonColor = Theme.of(context).textTheme.headline2!.color;
     }
 
     if (this._vacanza) {

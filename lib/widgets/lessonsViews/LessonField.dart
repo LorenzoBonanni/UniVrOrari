@@ -11,8 +11,8 @@ class LessonField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _text = _text.replaceAll("Ã", "à");
-    double size;
-    double iconSize;
+    double size = 0;
+    double iconSize = 0;
     if(MediaQuery.of(context).size.width <= 480) {
       size = 15;
       iconSize = 18;
@@ -25,20 +25,20 @@ class LessonField extends StatelessWidget {
     Color disabledColor = Theme.of(context).buttonTheme.getDisabledFillColor(
         new MaterialButton(onPressed: null)
     );
-    Color color = this.deactivated ? disabledColor : Theme.of(context).textTheme.headline4.color;
-    Color iconColor = this.deactivated ? disabledColor : Theme.of(context).iconTheme.color;
+    Color color = (this.deactivated ? disabledColor : Theme.of(context).textTheme.headline4!.color) as Color;
+    Color iconColor = (this.deactivated ? disabledColor : Theme.of(context).iconTheme.color) as Color;
 
     return Padding(
       padding: const EdgeInsets.only(left: 3.0, top: 2.0),
       child: new Row(
         children: <Widget>[
-          new Icon(this._icon, color: iconColor, size: iconSize,),
+          new Icon(this._icon, color: iconColor, size: iconSize),
           SizedBox(width: 4),
           Expanded(
               child: new Text(
             _text,
             style: GoogleFonts.workSans(
-              textStyle: Theme.of(context).textTheme.headline4.copyWith(color: color, fontSize: size),
+              textStyle: Theme.of(context).textTheme.headline4!.copyWith(color: color, fontSize: size),
             ),
           ))
         ],

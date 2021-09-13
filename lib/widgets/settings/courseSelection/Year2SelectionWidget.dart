@@ -32,7 +32,7 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
           child: new Text(year2Map["label"],
               style: new TextStyle(
                   fontSize: 10,
-                  color: Theme.of(context).textTheme.headline4.color
+                  color: Theme.of(context).textTheme.headline4!.color
               )
           ),
         ),
@@ -43,21 +43,21 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
     });
   }
 
-  void valueChanged(String year2Label) {
+  void valueChanged(String? year2Label) {
     var year2Map = _year2s.where((y2) => y2["label"] == year2Label).toList()[0];
     SettingUtils.setData("anno2", year2Map["valore"]);
-    SettingUtils.setData("txt_curr", year2Label);
+    SettingUtils.setData("txtcurr", year2Label);
     Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: CourseSelectionScreen()));
   }
 
   @override
   void initState() {
     SettingUtils.getData("anno").then((yearCode) {
-      if (yearCode != null) {
+      if (yearCode != "") {
         DataGetter.getCourses(yearCode).then((courses) async {
           // set hint to currently setted value
           var courseCode = await SettingUtils.getData("corso");
-          if(courseCode != null) {
+          if(courseCode != "") {
             var year2Code = await SettingUtils.getData("anno2");
             var courseArr = courses.where((c) => c[1] == courseCode).toList()[0];
             var year2Arr = courseArr[2];
@@ -66,7 +66,8 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
             });
 
             // set hint to current value
-            if (year2Code != null){
+            if (year2Code != ""){
+              print(year2Arr);
               var year2Map = year2Arr.where((y2) => y2["valore"] == year2Code).toList()[0];
               setState(() {
                 _hint =  year2Map["label"];
@@ -92,7 +93,7 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
           "Anno di Studio ",
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.headline4.color),
+              color: Theme.of(context).textTheme.headline4!.color),
         ),
         Padding(
             padding: const EdgeInsets.all(8.0),
@@ -101,7 +102,7 @@ class Year2SelectionWidgetState extends State<Year2SelectionWidget> {
                 hint: new Text(
                   _hint,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline4.color,
+                    color: Theme.of(context).textTheme.headline4!.color,
                   ),
                 ),
                 disabledHint: new Text(

@@ -24,30 +24,35 @@ class DataGetter{
 
   static Future getTimetable(date) async {
     String url = await _getUrl("/", date);
+    print(url);
     var client = Client();
-    Response response = await client.get(url);
+    Response response = await client.get(Uri.parse(url));
+    print(response.body);
     return jsonDecode(response.body);
   }
 
   static Future getTimetableExtra(date) async {
     String url = await _getUrlExtra("/", date);
     var client = Client();
-    Response response = await client.get(url);
+    Response response = await client.get(Uri.parse(url));
     return jsonDecode(response.body);
   }
 
   static Future getYears() async {
     var client = Client();
     Response response = await client.get(
-        "http://westcost0.altervista.org/orari/api.php?w=getyears"
+      // Uri.parse("http://127.0.0.1:5000/years")
+        Uri.parse("https://orariserver.azurewebsites.net/years")
+      // Uri.parse("http://westcost0.altervista.org/orari/api.php?w=getyears")
     );
+    var a = response.body;
     return jsonDecode(response.body);
   }
 
   static Future getCourses(var year) async {
     var client = Client();
     Response response = await client.get(
-        "http://westcost0.altervista.org/orari/api.php?w=getcourses&year=$year"
+        Uri.parse("https://orariserver.azurewebsites.net/courses?anno=$year")
     );
     return jsonDecode(response.body);
   }
@@ -57,15 +62,15 @@ class DataGetter{
     var client = Client();
     // https://regex101.com/r/FdF8U9/1
     RegExp regExp = new RegExp(r'var elenco_sedi = (\[{.+}\])');
-    Response response = await client.get(url);
+    Response response = await client.get(Uri.parse(url));
     // apply regex and select only array
-    return jsonDecode(regExp.firstMatch(response.body).group(1));
+    return jsonDecode(regExp.firstMatch(response.body)!.group(1)!);
   }
 
   static Future getEmptyRooms(String id) async {
     var url = "http://progetti.altervista.org/orari/aule.php" + "?id=" + id;
     var client = Client();
-    Response response = await client.get(url);
+    Response response = await client.get(Uri.parse(url));
     return jsonDecode(response.body);
   }
 
@@ -73,8 +78,8 @@ class DataGetter{
     String url = await _getUrl("/subjects", date);
     String urlExtra = await _getUrlExtra("/subjects", date);
     var client = Client();
-    Response response = await client.get(url);
-    Response responseExtra = await client.get(urlExtra);
+    Response response = await client.get(Uri.parse(url));
+    Response responseExtra = await client.get(Uri.parse(url));
     return [
       jsonDecode(response.body),
       jsonDecode(responseExtra.body)

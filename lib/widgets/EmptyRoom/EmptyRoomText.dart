@@ -13,8 +13,8 @@ class EmptyRoomText extends StatefulWidget {
 }
 
 class EmptyRoomTextState extends State<EmptyRoomText> {
-  String _roomName;
-  String _until;
+  String _roomName = "null";
+  String _until = "null";
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class EmptyRoomTextState extends State<EmptyRoomText> {
 
   @override
   Widget build(BuildContext context) {
-    return _roomName != null && _until != null
+    return _roomName != "null" && _until != "null"
         ? new Wrap(
             children: <Widget>[
               new Text(_roomName, style: Theme.of(context).textTheme.headline3),

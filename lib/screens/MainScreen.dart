@@ -19,7 +19,7 @@ class MainScreen extends StatefulWidget {
   final _now;
   bool _changeTab = false;
 
-  MainScreen([this._now, this._changeTab]);
+  MainScreen([this._now, _changeTab]);
 
   @override
   State<StatefulWidget> createState() {
@@ -33,17 +33,17 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   static var _lessons;
-  static DateTime _now;
-  static String _firstDay;
-  static String _lastDay;
+  static DateTime? _now;
+  static String? _firstDay;
+  static String? _lastDay;
   static var _dayWidget;
   static var _weekWidget;
   bool _isVisible = true;
-  ScrollController _scrollViewController;
-  Text _tabsTitle;
-  bool _changeTab = false;
-  Widget _widget;
+  ScrollController? _scrollViewController;
+  Text? _tabsTitle;
+  Widget? _widget;
   CircularBottomNavigationController _navigationController = new CircularBottomNavigationController(0);
+  bool _changeTab = false;
 
   MainScreenState([now, changeTab]) {
     _dayWidget = null;
@@ -70,7 +70,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
   // retrieve data and update timetable variables
   static updateTimetable() async {
-    var date = new DateFormat("dd-MM-yyyy").format(_now);
+    var date = new DateFormat("dd-MM-yyyy").format(_now!);
     Map<String, dynamic> timetable = await DataGetter.getTimetable(date);
     Map<String, dynamic> timetableExtra = await DataGetter.getTimetableExtra(date);
     timetable["lezioni"].forEach((e) => e["extra"] = false);
@@ -105,51 +105,51 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   nextDay() {
     // if weekend skip to monday
     do {
-      _now = _now.add(new Duration(days: 1));
-    } while (DateFormat('EEEE').format(_now) == "Sunday" || DateFormat('EEEE').format(_now) == "Saturday");
+      _now = _now!.add(new Duration(days: 1));
+    } while (DateFormat('EEEE').format(_now!) == "Sunday" || DateFormat('EEEE').format(_now!) == "Saturday");
     createNewDayWidget();
   }
 
   prevDay() {
     // if weekend skip to friday
     do {
-      _now = _now.subtract(new Duration(days: 1));
-    } while (DateFormat('EEEE').format(_now) == "Sunday" || DateFormat('EEEE').format(_now) == "Saturday");
+      _now = _now!.subtract(new Duration(days: 1));
+    } while (DateFormat('EEEE').format(_now!) == "Sunday" || DateFormat('EEEE').format(_now!) == "Saturday");
     createNewDayWidget();
   }
 
   nextWeek() {
-    _now = _now.add(new Duration(days: 7));
+    _now = _now!.add(new Duration(days: 7));
     createNewWeekWidget();
   }
 
   prevWeek() async {
-    _now = _now.subtract(new Duration(days: 7));
+    _now = _now!.subtract(new Duration(days: 7));
     createNewWeekWidget();
   }
 
   static getDayTitle() {
     final nomeGiorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
-    List<String> splittedFirstDay = _firstDay.split("/");
+    List<String> splittedFirstDay = _firstDay!.split("/");
     DateTime firstDay = DateTime(
       int.parse(splittedFirstDay[2]),
       int.parse(splittedFirstDay[1]),
       int.parse(splittedFirstDay[0]),
     );
     // days between first day and now
-    var dayDifference = _now.difference(firstDay).inDays;
+    var dayDifference = _now!.difference(firstDay).inDays;
 
     // day title
     if (dayDifference <= 4 && dayDifference >= 0) {
-      String text = nomeGiorni[dayDifference] + " " + new DateFormat("dd-MM-yyyy").format(_now);
-      return new Text(text);
+      String text = nomeGiorni[dayDifference] + " " + new DateFormat("dd-MM-yyyy").format(_now!);
+      return new Text(text, style: TextStyle(color: Colors.green));
     } else {
       return new Text("");
     }
   }
 
   static getWeekTitle() {
-    return new Text(_firstDay + " - " + _lastDay);
+    return new Text(_firstDay! + " - " + _lastDay!, style: TextStyle(color: Colors.green));
   }
 
   void _handleSelected(index) {
@@ -170,15 +170,15 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   void setupScroll() {
     _scrollViewController = new ScrollController();
-    _scrollViewController.addListener(() {
+    _scrollViewController!.addListener(() {
       // if user scroll down hide
-      if (_scrollViewController.position.userScrollDirection == ScrollDirection.reverse) {
+      if (_scrollViewController!.position.userScrollDirection == ScrollDirection.reverse) {
         setState(() {
           _isVisible = false;
         });
       }
       // if user scroll up show
-      if (_scrollViewController.position.userScrollDirection == ScrollDirection.forward) {
+      if (_scrollViewController!.position.userScrollDirection == ScrollDirection.forward) {
         setState(() {
           _isVisible = true;
         });
@@ -189,7 +189,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   initState() {
     SettingUtils.getCampusList().then((campuses) async {
       bool isSet = await SettingUtils.getSetted();
-      if (isSet == null || !isSet) {
+      if (!isSet) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CourseSelectionScreen()),
@@ -204,7 +204,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     });
 
     setupScroll();
-    if (_changeTab) {
+    if (_changeTab == true) {
       _navigationController.value = 1;
     }
 
@@ -214,14 +214,14 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     }
 
     // if the date is weekend go to monday
-    while (DateFormat('EEEE').format(_now) == "Sunday" || DateFormat('EEEE').format(_now) == "Saturday") {
-      _now = _now.add(new Duration(days: 1));
+    while (DateFormat('EEEE').format(_now!) == "Sunday" || DateFormat('EEEE').format(_now!) == "Saturday") {
+      _now = _now!.add(new Duration(days: 1));
     }
 
     // set DayView and WeekView widgets
     MainScreenState.updateTimetable().then((_) {
       setState(() {
-        _dayWidget = new DayView(_firstDay, _lessons, _now);
+        _dayWidget = new DayView(_firstDay!, _lessons, _now);
         _weekWidget = new WeekView(_lessons, _now);
       });
     });
@@ -298,7 +298,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
               )
             ];
           },
-          body: _widget != null ? _widget : Loading(),
+          body: (_widget != null ? _widget : Loading()) as Widget ,
       ),
       bottomNavigationBar: AnimatedContainer(
           duration: Duration(milliseconds: 300),

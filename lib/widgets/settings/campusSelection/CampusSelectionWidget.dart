@@ -13,8 +13,8 @@ class CampusSelectionWidget extends StatefulWidget {
 
 class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
   bool _setted = false;
-  Widget _hint;
-  List<DropdownMenuItem<String>> _items;
+  Widget _hint = new Text("");
+  List<DropdownMenuItem<String>>? _items;
 
   CampusSelectionWidgetState();
 
@@ -26,7 +26,7 @@ class CampusSelectionWidgetState extends State<CampusSelectionWidget> {
           value: campus["label"],
           child: new Text(
             campus["label"],
-            style: TextStyle(color: Theme.of(context).textTheme.headline4.color),
+            style: TextStyle(color: Theme.of(context).textTheme.headline4!.color),
           ),
         ),
       );

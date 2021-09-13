@@ -28,7 +28,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
                     value: year[0],
                     child: new Text(year[0],
                         style: TextStyle(
-                            color: Theme.of(context).textTheme.headline4.color
+                            color: Theme.of(context).textTheme.headline4!.color
                         ),
                     ),
                   ),
@@ -41,7 +41,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
     createItems().whenComplete(() {
       // get the array containing year code and label
       var yearArr = _years.where((y) => y[0] == value).toList()[0];
-      SettingUtils.setData("corso", null);
+      SettingUtils.setData("corso", "");
       SettingUtils.setData("anno", yearArr[1]);
     });
     Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: CourseSelectionScreen()));
@@ -50,7 +50,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
   @override
   void initState() {
     SettingUtils.getData("anno").then((yearCode) {
-      if (yearCode != null) {
+      if (yearCode != "") {
         createItems().then((_) {
           // get the array containing year code and label
           var yearArr = _years.where((y) => y[1] == yearCode).toList()[0];
@@ -78,7 +78,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
           "Anno Accademico",
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.headline4.color
+              color: Theme.of(context).textTheme.headline4!.color
           ),
         ),
         Padding(
@@ -88,7 +88,7 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
               hint: new Text(
                 _hint,
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline4.color
+                    color: Theme.of(context).textTheme.headline4!.color
                 ),
               ),
               disabledHint: new Text(

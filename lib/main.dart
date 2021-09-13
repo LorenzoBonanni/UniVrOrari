@@ -7,7 +7,10 @@ import 'package:school_timetable/themes/lightTheme.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 import 'package:school_timetable/widgets/Loading.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override

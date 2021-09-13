@@ -32,7 +32,7 @@ class Year2SelectionWidgetStateExtra extends State<Year2SelectionWidgetExtra> {
           child: new Text(year2Map["label"],
               style: new TextStyle(
                   fontSize: 10,
-                  color: Theme.of(context).textTheme.headline4.color
+                  color: Theme.of(context).textTheme.headline4!.color
               )
           ),
         ),
@@ -43,7 +43,7 @@ class Year2SelectionWidgetStateExtra extends State<Year2SelectionWidgetExtra> {
     });
   }
 
-  void valueChanged(String year2Label) {
+  void valueChanged(String? year2Label) {
     var year2Map = _year2s.where((y2) => y2["label"] == year2Label).toList()[0];
     SettingUtils.setData("anno2Extra", year2Map["valore"]);
     SettingUtils.setData("txt_currExtra", year2Label);
@@ -92,7 +92,7 @@ class Year2SelectionWidgetStateExtra extends State<Year2SelectionWidgetExtra> {
           "Anno di Studio ",
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.headline4.color),
+              color: Theme.of(context).textTheme.headline4!.color),
         ),
         Padding(
             padding: const EdgeInsets.all(8.0),
@@ -101,7 +101,7 @@ class Year2SelectionWidgetStateExtra extends State<Year2SelectionWidgetExtra> {
                 hint: new Text(
                   _hint,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline4.color,
+                    color: Theme.of(context).textTheme.headline4!.color,
                   ),
                 ),
                 disabledHint: new Text(

@@ -27,7 +27,7 @@ class CourseSelectionWidgetState extends State<CourseSelectionWidget> {
             course[0],
             style: new TextStyle(
                 fontSize: 10,
-                color: Theme.of(context).textTheme.headline4.color
+                color: Theme.of(context).textTheme.headline4!.color
             ),
           ),
         ),
@@ -41,14 +41,14 @@ class CourseSelectionWidgetState extends State<CourseSelectionWidget> {
   valueChanged(yearLabel) {
     var yearArr = _courses.where((c) => c[0] == yearLabel).toList()[0];
     SettingUtils.setData("corso", yearArr[1]);
-    SettingUtils.setData("anno2", null);
+    SettingUtils.setData("anno2", "");
     Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: CourseSelectionScreen()));
   }
 
   @override
   void initState() {
     SettingUtils.getData("anno").then((yearCode) {
-      if (yearCode != null) {
+      if (yearCode != "") {
         DataGetter.getCourses(yearCode).then((courses) async {
           // set courses
           setState(() {
@@ -58,7 +58,7 @@ class CourseSelectionWidgetState extends State<CourseSelectionWidget> {
 
           // set hint to currently setted value
           var courseCode = await SettingUtils.getData("corso");
-          if(courseCode != null) {
+          if(courseCode != "") {
             var courseArr = courses.where((c) => c[1] == courseCode).toList()[0];
             setState(() {
               _hint = courseArr[0];
@@ -81,7 +81,7 @@ class CourseSelectionWidgetState extends State<CourseSelectionWidget> {
       children: <Widget>[
         Text(
           "Nome Corso",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.headline4.color),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.headline4!.color),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -91,7 +91,7 @@ class CourseSelectionWidgetState extends State<CourseSelectionWidget> {
             hint: new Text(
               _hint,
               style: TextStyle(
-                color: Theme.of(context).textTheme.headline4.color,
+                color: Theme.of(context).textTheme.headline4!.color,
               ),
             ),
             disabledHint: new Text(

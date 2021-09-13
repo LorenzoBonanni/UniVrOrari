@@ -14,15 +14,15 @@ class SubjectSelectionWidget extends StatefulWidget {
 }
 
 class _SubjectSelectionWidgetState extends State<SubjectSelectionWidget> {
-  bool _value;
-  String _subject;
-  Color _color;
-  Color _normalColor;
-  Color _deactivatedColor;
+  bool? _value;
+  String? _subject;
+  Color? _color;
+  Color? _normalColor;
+  Color? _deactivatedColor;
 
   _SubjectSelectionWidgetState(this._subject);
 
-  void changeValue(bool value) {
+  void changeValue(bool? value) {
     if (value != null) {
       _color = value == true ? _normalColor : _deactivatedColor;
       setState(() {
@@ -57,7 +57,7 @@ class _SubjectSelectionWidgetState extends State<SubjectSelectionWidget> {
     }
 
     setState(() {
-      _normalColor = Theme.of(context).textTheme.headline4.color;
+      _normalColor = (Theme.of(context).textTheme.headline4!.color) as Color;
       _deactivatedColor = Theme.of(context).buttonTheme.getDisabledFillColor(
           new MaterialButton(onPressed: null)
       );
@@ -67,12 +67,12 @@ class _SubjectSelectionWidgetState extends State<SubjectSelectionWidget> {
         ? new Card(
           child: new CheckboxListTile(
             title: new Text(
-                _subject,
+                _subject!,
                 style: GoogleFonts.acme(
                   textStyle: TextStyle(
                     color: _color != null
                         ? _color
-                        : Theme.of(context).textTheme.headline4.color,
+                        : Theme.of(context).textTheme.headline4!.color,
                   ),
                 )
             ),
