@@ -30,15 +30,15 @@ class DayViewState extends State<DayView> {
   Widget build(BuildContext context) {
     List<dynamic> lessons = widget._lessons;
     SettingUtils.getData("lessons").then((filteredLessons) {
-      if (filteredLessons != null) {
-        Map<String, dynamic> fl = json.decode(filteredLessons);
-        fl.removeWhere((key, value) => value == true);
-        if (fl.isNotEmpty) {
-          lessons.removeWhere((lesson) => fl.keys.contains(lesson["nome_insegnamento"]));
-          setState(() {
-            _filteredSubjects.addAll(fl.keys);
-          });
-        }
+      Map<String, dynamic> fl = json.decode(filteredLessons);
+      fl.removeWhere((key, value) => value == true);
+      if (fl.isNotEmpty) {
+        lessons.removeWhere(
+          (lesson) => fl.keys.contains(lesson["nome_insegnamento"]),
+        );
+        setState(() {
+          _filteredSubjects.addAll(fl.keys);
+        });
       }
     });
 
@@ -50,24 +50,22 @@ class DayViewState extends State<DayView> {
     );
     // days between first day and now
     var dayDifference = widget._now.difference(firstDay).inDays;
-    if (lessons.isNotEmpty) {
-      lessons.removeWhere((l) => int.parse(l["giorno"]) != dayDifference + 1);
-      return ListView.builder(
-          itemCount: lessons.length,
-          itemBuilder: (context, index) {
-            return new LessonCard(
-              lessons[index]["nome_insegnamento"],
-              lessons[index]["docente"],
-              lessons[index]["aula"],
-              lessons[index]["ora_inizio"],
-              lessons[index]["ora_fine"],
-              lessons[index]["extra"],
-              widget._now,
-              true,
-            );
-          }
-      );
-    }
-    return Loading();
+    lessons.removeWhere((l) => int.parse(l["giorno"]) != dayDifference + 1);
+    return ListView.builder(
+      itemCount: lessons.length,
+      itemBuilder: (context, index) {
+        return new LessonCard(
+          lessons[index]["nome_insegnamento"],
+          lessons[index]["docente"],
+          lessons[index]["aula"],
+          lessons[index]["ora_inizio"],
+          lessons[index]["ora_fine"],
+          lessons[index]["extra"],
+          widget._now,
+          true,
+        );
+      },
+    );
+    // return Loading();
   }
 }
