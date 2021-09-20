@@ -27,7 +27,6 @@ class DataGetter{
     print(url);
     var client = Client();
     Response response = await client.get(Uri.parse(url));
-    print(response.body);
     return jsonDecode(response.body);
   }
 
@@ -41,11 +40,8 @@ class DataGetter{
   static Future getYears() async {
     var client = Client();
     Response response = await client.get(
-      // Uri.parse("http://127.0.0.1:5000/years")
         Uri.parse("https://orariserver.azurewebsites.net/years")
-      // Uri.parse("http://westcost0.altervista.org/orari/api.php?w=getyears")
     );
-    var a = response.body;
     return jsonDecode(response.body);
   }
 

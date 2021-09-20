@@ -1,13 +1,43 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
+dynamic sortLessons(lessons) async {
+  lessons.sort((l1, l2) {
+    int g1 = int.parse(l1["giorno"]);
+    int g2 = int.parse(l2["giorno"]);
+    var r = g1.compareTo(g2);
+    return r;
+  });
+  return lessons;
+}
+
+dynamic removeFilteredLessons([lessons, filteredSubjects]) {
+  print("remove filtered");
+
+  lessons.removeWhere(
+    (lesson) =>
+        lesson["nome_insegnamento"] == null ||
+        filteredSubjects.contains(lesson["nome_insegnamento"]),
+  );
+  return lessons;
+}
+
+int calculateDaysOfWeek(lessons) {
+  Set<String> days = {};
+  lessons.forEach((lesson) {
+    days.add(lesson["giorno"]);
+  });
+  return days.length;
+}
+
 // ignore: must_be_immutable
 class WeekView extends StatefulWidget {
-  final _lessons;
+  var _lessons;
   final _now;
   final _nomeGiorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
 
@@ -20,30 +50,41 @@ class WeekView extends StatefulWidget {
 class _WeekViewState extends State<WeekView> {
   List<Widget> _lessonsWidgets = [];
   List<String> _filteredSubjects = [];
+  int nDays = 0;
 
-  sortLessons() async{
-    setState(() {
-      widget._lessons.sort((l1, l2){
-        int g1 = int.parse(l1["giorno"]);
-        int g2 = int.parse(l2["giorno"]);
-        var r = g1.compareTo(g2);
-        return r;
-        // if (r != 0) return r; // 0 -> equal
-        // return g1.compareTo(l2M);
-      });
+  manageLessons() async {
+    SettingUtils.getData("lessons").then((lessonsToFilter) {
+      Map<String, dynamic> decodedLessonsToFilter = json.decode(lessonsToFilter);
+      decodedLessonsToFilter.removeWhere((key, value) => value == true);
+      print(decodedLessonsToFilter);
+
+      _filteredSubjects.addAll(decodedLessonsToFilter.keys);
+      compute(sortLessons, widget._lessons).then(
+        (sortedLessons) {
+          print("decodedLessonsToFilter: ");
+          print(decodedLessonsToFilter);
+          compute(
+            removeFilteredLessons,
+            [sortedLessons, decodedLessonsToFilter],
+          ).then(
+                (filteredLessons) => widget._lessons = filteredLessons,
+          );
+        }
+      );
+    });
+  }
+
+  initState() {
+    // print(widget._lessons);
+    manageLessons().then((_) {
+      compute(calculateDaysOfWeek, widget._lessons).then(
+        (numberOfDays) => this.nDays = numberOfDays,
+      );
     });
 
-    // lezioni.sort((l1, l2){
-    //   l1 = l1["ora_inizio"].split(":");
-    //   l2 = l2["ora_inizio"].split(":");
-    //   var l1H = l1[0];
-    //   var l1M = l1[1];
-    //   var l2H = l2[0];
-    //   var l2M = l2[1];
-    //   var r = l1H.compareTo(l2H);
-    //   if (r != 0) return r; // 0 -> equal
-    //   return l1M.compareTo(l2M);
-    // });
+    // createLessonWidgets();
+
+    super.initState();
   }
 
   void createLessonWidgets() {
@@ -51,7 +92,8 @@ class _WeekViewState extends State<WeekView> {
     List<Widget> l = [];
 
     widget._lessons.forEach((lesson) {
-      if (lesson["nome_insegnamento"] != null && !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
+      if (lesson["nome_insegnamento"] != null &&
+          !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
         String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
         if (currentDayName != dayName) {
           currentDayName = dayName;
@@ -60,10 +102,9 @@ class _WeekViewState extends State<WeekView> {
               dayName,
               style: GoogleFonts.cinzelDecorative(
                 textStyle: TextStyle(
-                  // fontWeight: FontWeight.bold,
+                    // fontWeight: FontWeight.bold,
                     fontSize: 25,
-                    color: Theme.of(context).primaryColor
-                ),
+                    color: Theme.of(context).primaryColor),
               ),
               textAlign: TextAlign.center,
             ),
@@ -72,14 +113,14 @@ class _WeekViewState extends State<WeekView> {
 
         l.add(
           new LessonCard(
-              lesson["nome_insegnamento"],
-              lesson["docente"],
-              lesson["aula"],
-              lesson["ora_inizio"],
-              lesson["ora_fine"],
-              lesson["extra"],
-              widget._now,
-              false
+            lesson["nome_insegnamento"],
+            lesson["docente"],
+            lesson["aula"],
+            lesson["ora_inizio"],
+            lesson["ora_fine"],
+            lesson["extra"],
+            widget._now,
+            false,
           ),
         );
       }
@@ -92,18 +133,43 @@ class _WeekViewState extends State<WeekView> {
   @override
   Widget build(BuildContext context) {
     _lessonsWidgets = [];
+    String currentDayName = "";
 
-    sortLessons();
-    SettingUtils.getData("lessons").then((lessons){
-      Map<String, dynamic> l = json.decode(lessons);
-      l.removeWhere((key, value) => value == true);
-      _filteredSubjects.addAll(l.keys);
-    });
-    createLessonWidgets();
-
+    // return new ListView.builder(
+    //     itemCount: _lessonsWidgets.length,
+    //     itemBuilder: (context, index) => _lessonsWidgets[index],
+    // );
     return new ListView.builder(
-        itemCount: _lessonsWidgets.length,
-        itemBuilder: (context, index) => _lessonsWidgets[index]
+      itemCount: widget._lessons.length + nDays,
+      itemBuilder: (context, index) {
+        var lesson = widget._lessons[index];
+        String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
+
+        if (currentDayName != dayName) {
+          currentDayName = dayName;
+          return new Text(
+            dayName,
+            style: GoogleFonts.cinzelDecorative(
+              textStyle: TextStyle(
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Theme.of(context).primaryColor),
+            ),
+            textAlign: TextAlign.center,
+          );
+        }
+
+        return new LessonCard(
+          lesson["nome_insegnamento"],
+          lesson["docente"],
+          lesson["aula"],
+          lesson["ora_inizio"],
+          lesson["ora_fine"],
+          lesson["extra"],
+          widget._now,
+          false,
+        );
+      },
     );
   }
 }

@@ -31,7 +31,8 @@ class MainScreen extends StatefulWidget {
   }
 }
 
-class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
+class MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
   static var _lessons;
   static DateTime? _now;
   static String? _firstDay;
@@ -55,7 +56,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
 
   static sortTimetable(List<dynamic> lezioni) {
-    lezioni.sort((l1, l2){
+    lezioni.sort((l1, l2) {
       l1 = l1["ora_inizio"].split(":");
       l2 = l2["ora_inizio"].split(":");
       var l1H = l1[0];
@@ -63,11 +64,14 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
       var l2H = l2[0];
       var l2M = l2[1];
       var r = l1H.compareTo(l2H);
-      if (r != 0) return r; // 0 -> equal
-      return l1M.compareTo(l2M);
+      if (r != 0)
+        return r; // 0 -> equal
+      else
+        return l1M.compareTo(l2M);
     });
     return lezioni;
   }
+
   // retrieve data and update timetable variables
   static updateTimetable() async {
     var date = new DateFormat("dd-MM-yyyy").format(_now!);
@@ -94,7 +98,9 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
 
   createNewWeekWidget() {
-    updateTimetable().then(([lezioni, firstDay, lastDay]) {
+    updateTimetable().then((_) {
+      print("lezioni");
+      print(_lessons);
       setState(() {
         _weekWidget = new WeekView(_lessons, _now);
       });
@@ -106,7 +112,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     // if weekend skip to monday
     do {
       _now = _now!.add(new Duration(days: 1));
-    } while (DateFormat('EEEE').format(_now!) == "Sunday" || DateFormat('EEEE').format(_now!) == "Saturday");
+    } while (DateFormat('EEEE').format(_now!) == "Sunday" ||
+        DateFormat('EEEE').format(_now!) == "Saturday");
     createNewDayWidget();
   }
 
@@ -114,7 +121,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     // if weekend skip to friday
     do {
       _now = _now!.subtract(new Duration(days: 1));
-    } while (DateFormat('EEEE').format(_now!) == "Sunday" || DateFormat('EEEE').format(_now!) == "Saturday");
+    } while (DateFormat('EEEE').format(_now!) == "Sunday" ||
+        DateFormat('EEEE').format(_now!) == "Saturday");
     createNewDayWidget();
   }
 
@@ -141,7 +149,9 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
     // day title
     if (dayDifference <= 4 && dayDifference >= 0) {
-      String text = nomeGiorni[dayDifference] + " " + new DateFormat("dd-MM-yyyy").format(_now!);
+      String text = nomeGiorni[dayDifference] +
+          " " +
+          new DateFormat("dd-MM-yyyy").format(_now!);
       return new Text(text, style: TextStyle(color: Colors.green));
     } else {
       return new Text("");
@@ -149,7 +159,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
 
   static getWeekTitle() {
-    return new Text(_firstDay! + " - " + _lastDay!, style: TextStyle(color: Colors.green));
+    return new Text(_firstDay! + " - " + _lastDay!,
+        style: TextStyle(color: Colors.green));
   }
 
   void _handleSelected(index) {
@@ -160,11 +171,9 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   void changePage(bool changeTab) {
     Navigator.pushReplacement(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: MainScreen(_now, changeTab)
-        ),
+      context,
+      PageTransition(
+          type: PageTransitionType.fade, child: MainScreen(_now, changeTab)),
     );
   }
 
@@ -172,13 +181,15 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     _scrollViewController = new ScrollController();
     _scrollViewController!.addListener(() {
       // if user scroll down hide
-      if (_scrollViewController!.position.userScrollDirection == ScrollDirection.reverse) {
+      if (_scrollViewController!.position.userScrollDirection ==
+          ScrollDirection.reverse) {
         setState(() {
           _isVisible = false;
         });
       }
       // if user scroll up show
-      if (_scrollViewController!.position.userScrollDirection == ScrollDirection.forward) {
+      if (_scrollViewController!.position.userScrollDirection ==
+          ScrollDirection.forward) {
         setState(() {
           _isVisible = true;
         });
@@ -195,12 +206,6 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
           MaterialPageRoute(builder: (context) => CourseSelectionScreen()),
         );
       }
-      // else if (campuses.isEmpty || campuses == null) {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => CampusesSelectionScreen()),
-      //   );
-      // }
     });
 
     setupScroll();
@@ -214,12 +219,15 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     }
 
     // if the date is weekend go to monday
-    while (DateFormat('EEEE').format(_now!) == "Sunday" || DateFormat('EEEE').format(_now!) == "Saturday") {
+    while (DateFormat('EEEE').format(_now!) == "Sunday" ||
+        DateFormat('EEEE').format(_now!) == "Saturday") {
       _now = _now!.add(new Duration(days: 1));
     }
 
     // set DayView and WeekView widgets
     MainScreenState.updateTimetable().then((_) {
+      print("firstDay:");
+      print(_firstDay);
       setState(() {
         _dayWidget = new DayView(_firstDay!, _lessons, _now);
         _weekWidget = new WeekView(_lessons, _now);
@@ -276,29 +284,29 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
     return new Scaffold(
       body: new NestedScrollView(
-          controller: _scrollViewController,
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              new SliverAppBar(
-                automaticallyImplyLeading: false,
-                centerTitle: true,
-                title: _firstDay != null ? _tabsTitle : new Text(""),
-                // forceElevated: innerBoxIsScrolled,
-                actions: <Widget>[
-                  IconButton(
-                    icon: new Icon(
-                      Icons.settings,
-                    ),
-                    onPressed: () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsScreen()),
-                    ),
+        controller: _scrollViewController,
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            new SliverAppBar(
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+              title: _firstDay != null ? _tabsTitle : new Text(""),
+              // forceElevated: innerBoxIsScrolled,
+              actions: <Widget>[
+                IconButton(
+                  icon: new Icon(
+                    Icons.settings,
                   ),
-                ],
-              )
-            ];
-          },
-          body: (_widget != null ? _widget : Loading()) as Widget ,
+                  onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsScreen()),
+                  ),
+                ),
+              ],
+            )
+          ];
+        },
+        body: (_widget != null ? _widget : Loading()) as Widget,
       ),
       bottomNavigationBar: AnimatedContainer(
           duration: Duration(milliseconds: 300),
