@@ -33,7 +33,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
-  static var _lessons;
+  static List<dynamic> _lessons = [];
   static DateTime? _now;
   static String? _firstDay;
   static String? _lastDay;
@@ -229,8 +229,8 @@ class MainScreenState extends State<MainScreen>
       print("firstDay:");
       print(_firstDay);
       setState(() {
-        _dayWidget = new DayView(_firstDay!, _lessons, _now);
-        _weekWidget = new WeekView(_lessons, _now);
+        _dayWidget = new DayView(_firstDay!, List.from(_lessons), _now);
+        _weekWidget = new WeekView(List.from(_lessons), _now);
       });
     });
 

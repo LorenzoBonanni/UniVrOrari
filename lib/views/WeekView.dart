@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:school_timetable/utils/SettingUtils.dart';
+import 'package:school_timetable/widgets/Loading.dart';
 import 'package:school_timetable/widgets/lessonsViews/LessonCard.dart';
 
 dynamic sortLessons(lessons) async {
@@ -16,9 +17,9 @@ dynamic sortLessons(lessons) async {
   return lessons;
 }
 
-dynamic removeFilteredLessons([lessons, filteredSubjects]) {
-  print("remove filtered");
-
+List<dynamic> removeFilteredLessons(Map map) {
+  List<dynamic> lessons = map["lessons"];
+  List<String> filteredSubjects = map["filteredSubjects"];
   lessons.removeWhere(
     (lesson) =>
         lesson["nome_insegnamento"] == null ||
@@ -50,36 +51,31 @@ class WeekView extends StatefulWidget {
 class _WeekViewState extends State<WeekView> {
   List<Widget> _lessonsWidgets = [];
   List<String> _filteredSubjects = [];
-  int nDays = 0;
+  int nDays = -1;
 
   manageLessons() async {
     SettingUtils.getData("lessons").then((lessonsToFilter) {
-      Map<String, dynamic> decodedLessonsToFilter = json.decode(lessonsToFilter);
+      Map<String, dynamic> decodedLessonsToFilter =
+          json.decode(lessonsToFilter);
       decodedLessonsToFilter.removeWhere((key, value) => value == true);
-      print(decodedLessonsToFilter);
 
       _filteredSubjects.addAll(decodedLessonsToFilter.keys);
-      compute(sortLessons, widget._lessons).then(
-        (sortedLessons) {
-          print("decodedLessonsToFilter: ");
-          print(decodedLessonsToFilter);
-          compute(
-            removeFilteredLessons,
-            [sortedLessons, decodedLessonsToFilter],
-          ).then(
-                (filteredLessons) => widget._lessons = filteredLessons,
-          );
-        }
-      );
+      compute(sortLessons, widget._lessons).then((sortedLessons) {
+        Map map = Map();
+        map["lessons"] = sortedLessons;
+        map["filteredSubjects"] = _filteredSubjects;
+        compute(removeFilteredLessons, map).then(
+          (filteredLessons) => widget._lessons = filteredLessons,
+        );
+      });
     });
   }
 
   initState() {
-    // print(widget._lessons);
     manageLessons().then((_) {
-      compute(calculateDaysOfWeek, widget._lessons).then(
-        (numberOfDays) => this.nDays = numberOfDays,
-      );
+      setState(() {
+        nDays = calculateDaysOfWeek(widget._lessons);
+      });
     });
 
     // createLessonWidgets();
@@ -87,89 +83,92 @@ class _WeekViewState extends State<WeekView> {
     super.initState();
   }
 
-  void createLessonWidgets() {
-    String currentDayName = "";
-    List<Widget> l = [];
-
-    widget._lessons.forEach((lesson) {
-      if (lesson["nome_insegnamento"] != null &&
-          !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
-        String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
-        if (currentDayName != dayName) {
-          currentDayName = dayName;
-          l.add(
-            new Text(
-              dayName,
-              style: GoogleFonts.cinzelDecorative(
-                textStyle: TextStyle(
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                    color: Theme.of(context).primaryColor),
-              ),
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
-
-        l.add(
-          new LessonCard(
-            lesson["nome_insegnamento"],
-            lesson["docente"],
-            lesson["aula"],
-            lesson["ora_inizio"],
-            lesson["ora_fine"],
-            lesson["extra"],
-            widget._now,
-            false,
-          ),
-        );
-      }
-    });
-    setState(() {
-      this._lessonsWidgets = l;
-    });
-  }
+  // void createLessonWidgets() {
+  //   String currentDayName = "";
+  //   List<Widget> l = [];
+  //
+  //   widget._lessons.forEach((lesson) {
+  //     if (lesson["nome_insegnamento"] != null &&
+  //         !_filteredSubjects.contains(lesson["nome_insegnamento"])) {
+  //       String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
+  //       if (currentDayName != dayName) {
+  //         currentDayName = dayName;
+  //         l.add(
+  //           new Text(
+  //             dayName,
+  //             style: GoogleFonts.cinzelDecorative(
+  //               textStyle: TextStyle(
+  //                   // fontWeight: FontWeight.bold,
+  //                   fontSize: 25,
+  //                   color: Theme.of(context).primaryColor),
+  //             ),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         );
+  //       }
+  //
+  //       l.add(
+  //         new LessonCard(
+  //           lesson["nome_insegnamento"],
+  //           lesson["docente"],
+  //           lesson["aula"],
+  //           lesson["ora_inizio"],
+  //           lesson["ora_fine"],
+  //           lesson["extra"],
+  //           widget._now,
+  //           false,
+  //         ),
+  //       );
+  //     }
+  //   });
+  //   setState(() {
+  //     this._lessonsWidgets = l;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    _lessonsWidgets = [];
+    // _lessonsWidgets = [];
     String currentDayName = "";
 
     // return new ListView.builder(
     //     itemCount: _lessonsWidgets.length,
     //     itemBuilder: (context, index) => _lessonsWidgets[index],
     // );
-    return new ListView.builder(
-      itemCount: widget._lessons.length + nDays,
-      itemBuilder: (context, index) {
-        var lesson = widget._lessons[index];
-        String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
+    return this.nDays == -1
+        ? Loading()
+        : new ListView.builder(
+            itemCount: widget._lessons.length + nDays,
+            itemBuilder: (context, index) {
+              var lesson = widget._lessons[index];
+              String dayName =
+                  widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
 
-        if (currentDayName != dayName) {
-          currentDayName = dayName;
-          return new Text(
-            dayName,
-            style: GoogleFonts.cinzelDecorative(
-              textStyle: TextStyle(
-                  // fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Theme.of(context).primaryColor),
-            ),
-            textAlign: TextAlign.center,
+              if (currentDayName != dayName) {
+                currentDayName = dayName;
+                return new Text(
+                  dayName,
+                  style: GoogleFonts.cinzelDecorative(
+                    textStyle: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                  textAlign: TextAlign.center,
+                );
+              }
+
+              return new LessonCard(
+                lesson["nome_insegnamento"],
+                lesson["docente"],
+                lesson["aula"],
+                lesson["ora_inizio"],
+                lesson["ora_fine"],
+                lesson["extra"],
+                widget._now,
+                false,
+              );
+            },
           );
-        }
-
-        return new LessonCard(
-          lesson["nome_insegnamento"],
-          lesson["docente"],
-          lesson["aula"],
-          lesson["ora_inizio"],
-          lesson["ora_fine"],
-          lesson["extra"],
-          widget._now,
-          false,
-        );
-      },
-    );
   }
 }
