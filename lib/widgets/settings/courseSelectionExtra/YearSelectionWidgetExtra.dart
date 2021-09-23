@@ -56,7 +56,7 @@ class _YearSelectionWidgetStateExtra extends State<YearSelectionWidgetExtra> {
   @override
   void initState() {
     SettingUtils.getData("annoExtra").then((yearCode) {
-      if (yearCode != null) {
+      if (yearCode != "") {
         createItems().then((_) {
           // get the array containing year code and label
           var yearArr = _years.where((y) => y[1] == yearCode).toList()[0];

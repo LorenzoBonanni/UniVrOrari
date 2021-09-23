@@ -11,7 +11,7 @@ class SubjectSelectionScreen extends StatefulWidget {
 }
 
 class _SubjectSelectionScreenState extends State<SubjectSelectionScreen> {
-  var _subjects;
+  List<dynamic> _subjects = List.empty();
 
   void finishCallback() {
     Navigator.push(
@@ -28,8 +28,10 @@ class _SubjectSelectionScreenState extends State<SubjectSelectionScreen> {
     String date = new DateFormat("dd-MM-yyyy").format(new DateTime.now());
     DataGetter.getSubjects(date).then((s) {
       var subjects = s[0]["lezioni"];
-      var subjectsExtra = s[1]["lezioni"];
-      subjects = subjects + subjectsExtra;
+      // TODO fix
+      // var subjectsExtra = s[1]["lezioni"];
+      // subjects = subjects + subjectsExtra;
+      subjects = subjects;
       setState(() {
         this._subjects = subjects;
       });
@@ -45,7 +47,7 @@ class _SubjectSelectionScreenState extends State<SubjectSelectionScreen> {
         automaticallyImplyLeading: false,
         centerTitle: true,
       ),
-      body: _subjects != null
+      body: _subjects != List.empty()
             ? new Column(
                 children: [
                   new Text(

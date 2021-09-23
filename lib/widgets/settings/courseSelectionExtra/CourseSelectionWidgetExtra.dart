@@ -48,7 +48,7 @@ class CourseSelectionWidgetStateExtra extends State<CourseSelectionWidgetExtra> 
   @override
   void initState() {
     SettingUtils.getData("annoExtra").then((yearCode) {
-      if (yearCode != null) {
+      if (yearCode != "") {
         DataGetter.getCourses(yearCode).then((courses) async {
           // set courses
           setState(() {
@@ -58,7 +58,7 @@ class CourseSelectionWidgetStateExtra extends State<CourseSelectionWidgetExtra> 
 
           // set hint to currently setted value
           var courseCode = await SettingUtils.getData("corsoExtra");
-          if(courseCode != null) {
+          if(courseCode != "") {
             var courseArr = courses.where((c) => c[1] == courseCode).toList()[0];
             setState(() {
               _hint = courseArr[0];

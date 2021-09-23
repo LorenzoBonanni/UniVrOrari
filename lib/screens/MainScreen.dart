@@ -99,8 +99,6 @@ class MainScreenState extends State<MainScreen>
 
   createNewWeekWidget() {
     updateTimetable().then((_) {
-      print("lezioni");
-      print(_lessons);
       setState(() {
         _weekWidget = new WeekView(_lessons, _now);
       });
@@ -226,8 +224,6 @@ class MainScreenState extends State<MainScreen>
 
     // set DayView and WeekView widgets
     MainScreenState.updateTimetable().then((_) {
-      print("firstDay:");
-      print(_firstDay);
       setState(() {
         _dayWidget = new DayView(_firstDay!, List.from(_lessons), _now);
         _weekWidget = new WeekView(List.from(_lessons), _now);

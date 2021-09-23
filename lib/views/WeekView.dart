@@ -54,7 +54,8 @@ class _WeekViewState extends State<WeekView> {
 
   manageLessons() async {
     SettingUtils.getData("lessons").then((lessonsToFilter) {
-      Map<String, dynamic> decodedLessonsToFilter = json.decode(lessonsToFilter);
+      Map<String, dynamic> decodedLessonsToFilter =
+          json.decode(lessonsToFilter);
       decodedLessonsToFilter.removeWhere((key, value) => value == true);
 
       _filteredSubjects.addAll(decodedLessonsToFilter.keys);
@@ -62,42 +63,46 @@ class _WeekViewState extends State<WeekView> {
         Map map = Map();
         map["lessons"] = sortedLessons;
         map["filteredSubjects"] = _filteredSubjects;
-        compute(removeFilteredLessons, map).then(
-          (filteredLessons) => {
-            setState((){
-              widget._lessons = filteredLessons;
-            })
-          }
-        );
+        compute(removeFilteredLessons, map).then((filteredLessons) => {
+              setState(() {
+                widget._lessons = filteredLessons;
+                nDays = calculateDaysOfWeek(filteredLessons);
+              })
+            });
       });
     });
   }
 
   initState() {
-    manageLessons().then((_) {
-      setState(() {
-        nDays = calculateDaysOfWeek(widget._lessons);
-      });
-    });
-
-    // createLessonWidgets();
+    manageLessons().then((_) {});
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    // TODO: when extraCourse is added currIndex goes out of range need FIX
     String currentDayName = "";
 
-    int numElements = widget._lessons.length + nDays;
+    int numElements = (widget._lessons.length + nDays);
+    print("numElements: $numElements");
     int currIndex = 0;
     return this.nDays == -1
         ? Loading()
         : new ListView.builder(
             itemCount: numElements,
             itemBuilder: (context, index) {
+              if (currIndex == widget._lessons.length) {
+                print(widget._lessons.length);
+                print("index: $index");
+                print("numElements: $numElements");
+                print(
+                    "\n last elem: ${widget._lessons[widget._lessons.length - 1]}");
+              }
               var lesson = widget._lessons[currIndex];
-              String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
+              String dayName =
+                  widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
 
               if (currentDayName != dayName) {
                 currentDayName = dayName;

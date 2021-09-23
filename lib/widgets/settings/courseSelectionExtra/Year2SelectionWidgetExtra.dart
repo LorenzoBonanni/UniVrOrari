@@ -53,11 +53,11 @@ class Year2SelectionWidgetStateExtra extends State<Year2SelectionWidgetExtra> {
   @override
   void initState() {
     SettingUtils.getData("annoExtra").then((yearCode) {
-      if (yearCode != null) {
+      if (yearCode != "") {
         DataGetter.getCourses(yearCode).then((courses) async {
           // set hint to currently setted value
           var courseCode = await SettingUtils.getData("corsoExtra");
-          if(courseCode != null) {
+          if(courseCode != "") {
             var year2Code = await SettingUtils.getData("anno2Extra");
             var courseArr = courses.where((c) => c[1] == courseCode).toList()[0];
             var year2Arr = courseArr[2];
@@ -66,7 +66,7 @@ class Year2SelectionWidgetStateExtra extends State<Year2SelectionWidgetExtra> {
             });
 
             // set hint to current value
-            if (year2Code != null){
+            if (year2Code != ""){
               var year2Map = year2Arr.where((y2) => y2["valore"] == year2Code).toList()[0];
               setState(() {
                 _hint =  year2Map["label"];

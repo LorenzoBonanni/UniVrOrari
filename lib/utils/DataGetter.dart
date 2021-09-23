@@ -50,6 +50,7 @@ class DataGetter{
     Response response = await client.get(
         Uri.parse("https://orariserver.azurewebsites.net/courses?anno=$year")
     );
+    print("https://orariserver.azurewebsites.net/courses?anno=$year");
     return jsonDecode(response.body);
   }
 
@@ -72,6 +73,7 @@ class DataGetter{
 
   static Future getSubjects(date) async{
     String url = await _getUrl("/subjects", date);
+    print("subj: $url");
     String urlExtra = await _getUrlExtra("/subjects", date);
     var client = Client();
     Response response = await client.get(Uri.parse(url));
