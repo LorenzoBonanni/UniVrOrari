@@ -89,19 +89,30 @@ class MainScreenState extends State<MainScreen>
   }
 
   createNewDayWidget() {
-    updateTimetable().then(([lezioni, firstDay, lastDay]) {
-      setState(() {
-        _dayWidget = new DayView(firstDay, lezioni, _now);
-      });
+    updateTimetable().then((out) {
+      List<dynamic> lezioni = out[0];
+      String firstDay = out[1];
+      String lastDay = out[2];
+
+      print("lezioni: $lezioni");
+      print("firstDay: $firstDay");
+      print("lastDay: $lastDay");
+      if (mounted) {
+        setState(() {
+          _dayWidget = new DayView(firstDay, lezioni, _now);
+        });
+      }
     });
     changePage(false);
   }
 
   createNewWeekWidget() {
     updateTimetable().then((_) {
-      setState(() {
-        _weekWidget = new WeekView(_lessons, _now);
-      });
+      if(mounted) {
+        setState(() {
+          _weekWidget = new WeekView(_lessons, _now);
+        });
+      }
     });
     changePage(true);
   }

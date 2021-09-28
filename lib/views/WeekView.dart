@@ -64,10 +64,13 @@ class _WeekViewState extends State<WeekView> {
         map["lessons"] = sortedLessons;
         map["filteredSubjects"] = _filteredSubjects;
         compute(removeFilteredLessons, map).then((filteredLessons) => {
-              setState(() {
-                widget._lessons = filteredLessons;
-                nDays = calculateDaysOfWeek(filteredLessons);
-              })
+              if (mounted)
+                {
+                  setState(() {
+                    widget._lessons = filteredLessons;
+                    nDays = calculateDaysOfWeek(filteredLessons);
+                  })
+                }
             });
       });
     });
@@ -81,12 +84,12 @@ class _WeekViewState extends State<WeekView> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: when extraCourse is added currIndex goes out of range need FIX
     String currentDayName = "";
 
     int numElements = (widget._lessons.length + nDays);
     print("numElements: $numElements");
+    print("nDays: $nDays");
     int currIndex = 0;
     return this.nDays == -1
         ? Loading()
@@ -94,15 +97,13 @@ class _WeekViewState extends State<WeekView> {
             itemCount: numElements,
             itemBuilder: (context, index) {
               if (currIndex == widget._lessons.length) {
-                print(widget._lessons.length);
+                print(widget._lessons.length); // 11
                 print("index: $index");
                 print("numElements: $numElements");
-                print(
-                    "\n last elem: ${widget._lessons[widget._lessons.length - 1]}");
+                print("\n last elem: ${widget._lessons[widget._lessons.length - 1]}");
               }
               var lesson = widget._lessons[currIndex];
-              String dayName =
-                  widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
+              String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
 
               if (currentDayName != dayName) {
                 currentDayName = dayName;

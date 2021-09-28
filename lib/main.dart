@@ -25,7 +25,7 @@ class MyAppState extends State<MyApp> {
   void initState() {
     // check theme
     SettingUtils.getData("darktheme").then((value) {
-     if (value != null) {
+     if (value != "") {
        bool v = value.toLowerCase() == "true";
        setState(() {
          _theme = v ? darkTheme() : lightTheme();
