@@ -82,55 +82,66 @@ class _WeekViewState extends State<WeekView> {
     super.initState();
   }
 
+  List<Widget> createWidgets(Map map) {
+    List<dynamic> lessons = map["lessons"];
+    DateTime now = map["now"];
+
+    final _nomeGiorni = [
+      "Lunedì",
+      "Martedì",
+      "Mercoledì",
+      "Giovedì",
+      "Venerdì"
+    ];
+    String currentDayName = "";
+    List<Widget> widgets = [];
+
+    lessons.forEach((lesson) {
+      String dayName = _nomeGiorni[int.parse(lesson["giorno"]) - 1];
+
+      if (currentDayName != dayName) {
+        currentDayName = dayName;
+        widgets.add(new Text(
+          dayName,
+          style: GoogleFonts.cinzelDecorative(
+            textStyle: TextStyle(
+                // fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Theme.of(context).primaryColor),
+          ),
+          textAlign: TextAlign.center,
+        ));
+      } else {
+        widgets.add(new LessonCard(
+          lesson["nome_insegnamento"],
+          lesson["docente"],
+          lesson["aula"],
+          lesson["ora_inizio"],
+          lesson["ora_fine"],
+          lesson["extra"],
+          now,
+          false,
+        ));
+      }
+    });
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: when extraCourse is added currIndex goes out of range need FIX
-    String currentDayName = "";
 
-    int numElements = (widget._lessons.length + nDays);
-    print("numElements: $numElements");
-    print("nDays: $nDays");
-    int currIndex = 0;
+    List<Widget> widgets = [];
+    if (this.nDays != -1) {
+      Map map = new Map();
+      map["lessons"] = widget._lessons;
+      map["now"] = widget._now;
+      widgets = createWidgets(map);
+    }
+
     return this.nDays == -1
         ? Loading()
-        : new ListView.builder(
-            itemCount: numElements,
-            itemBuilder: (context, index) {
-              if (currIndex == widget._lessons.length) {
-                print(widget._lessons.length); // 11
-                print("index: $index");
-                print("numElements: $numElements");
-                print("\n last elem: ${widget._lessons[widget._lessons.length - 1]}");
-              }
-              var lesson = widget._lessons[currIndex];
-              String dayName = widget._nomeGiorni[int.parse(lesson["giorno"]) - 1];
-
-              if (currentDayName != dayName) {
-                currentDayName = dayName;
-                return new Text(
-                  dayName,
-                  style: GoogleFonts.cinzelDecorative(
-                    textStyle: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Theme.of(context).primaryColor),
-                  ),
-                  textAlign: TextAlign.center,
-                );
-              } else {
-                currIndex++;
-                return new LessonCard(
-                  lesson["nome_insegnamento"],
-                  lesson["docente"],
-                  lesson["aula"],
-                  lesson["ora_inizio"],
-                  lesson["ora_fine"],
-                  lesson["extra"],
-                  widget._now,
-                  false,
-                );
-              }
-            },
+        : ListView(
+            children: widgets,
           );
   }
 }

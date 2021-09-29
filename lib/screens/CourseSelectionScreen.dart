@@ -26,7 +26,7 @@ class CourseSelectionScreen extends StatelessWidget {
             new YearSelectionWidget(),
             new CourseSelectionWidget(),
             new Year2SelectionWidget(),
-            new FlatButton(
+            new TextButton(
                 onPressed: () {
                   SettingUtils.updateCampusList().then((value) {
                     Navigator.push(

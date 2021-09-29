@@ -26,10 +26,10 @@ class CourseSelectionScreenExtra extends StatelessWidget {
             new YearSelectionWidgetExtra(),
             new CourseSelectionWidgetExtra(),
             new Year2SelectionWidgetExtra(),
-            new FlatButton(
+            new TextButton(
                 onPressed: () {
                   SettingUtils.updateCampusList().then((value) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => MainScreen(),

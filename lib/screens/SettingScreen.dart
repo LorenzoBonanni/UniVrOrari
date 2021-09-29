@@ -55,7 +55,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(color: Colors.green),
               ),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => CourseSelectionScreen(),
@@ -63,54 +63,53 @@ class SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-            // TODO: reinsert those options
-            // new TextButton(
-            //   child: new Text(
-            //     "CORSO EXTRA",
-            //     style: TextStyle(color: Colors.green),
-            //   ),
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => CourseSelectionScreenExtra(),
-            //       ),
-            //     );
-            //   },
-            // ),
-            // Builder(
-            //     builder: (context) => new TextButton(
-            //       child: new Text(
-            //         "ELIMINA CORSO EXTRA",
-            //         style: TextStyle(color: Colors.green),
-            //       ),
-            //       onPressed: () {
-            //         SettingUtils.setData("annoExtra", "");
-            //         SettingUtils.setData("corsoExtra", "");
-            //         SettingUtils.setData("anno2Extra", "");
-            //         SettingUtils.setData("txt_currExtra", "");
-            //         SettingUtils.setData("lessons", json.encode({}));
-            //         ScaffoldMessenger.of(context).showSnackBar(
-            //             SnackBar(
-            //                 content: new Text(
-            //                   "Corso Extra Eliminato",
-            //                   style: TextStyle(
-            //                       color: Theme.of(context).textTheme.headline4!.color
-            //                   ),
-            //                 ),
-            //               backgroundColor: Theme.of(context).backgroundColor,
-            //             )
-            //         );
-            //       },
-            //     )
-            // ),
+            new TextButton(
+              child: new Text(
+                "CORSO EXTRA",
+                style: TextStyle(color: Colors.green),
+              ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CourseSelectionScreenExtra(),
+                  ),
+                );
+              },
+            ),
+            Builder(
+                builder: (context) => new TextButton(
+                  child: new Text(
+                    "ELIMINA CORSO EXTRA",
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  onPressed: () {
+                    SettingUtils.setData("annoExtra", "");
+                    SettingUtils.setData("corsoExtra", "");
+                    SettingUtils.setData("anno2Extra", "");
+                    SettingUtils.setData("txt_currExtra", "");
+                    SettingUtils.setData("lessons", json.encode({}));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: new Text(
+                              "Corso Extra Eliminato",
+                              style: TextStyle(
+                                  color: Theme.of(context).textTheme.headline4!.color
+                              ),
+                            ),
+                          backgroundColor: Theme.of(context).backgroundColor,
+                        )
+                    );
+                  },
+                )
+            ),
             new TextButton(
               child: new Text(
                 "FILTRA LEZIONI",
                 style: TextStyle(color: Colors.green),
               ),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => SubjectSelectionScreen(),

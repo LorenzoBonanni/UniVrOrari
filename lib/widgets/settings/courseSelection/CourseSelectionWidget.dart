@@ -42,7 +42,7 @@ class CourseSelectionWidgetState extends State<CourseSelectionWidget> {
     var yearArr = _courses.where((c) => c[0] == yearLabel).toList()[0];
     SettingUtils.setData("corso", yearArr[1]);
     SettingUtils.setData("anno2", "");
-    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: CourseSelectionScreen()));
+    Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.fade, child: CourseSelectionScreen()));
   }
 
   @override
