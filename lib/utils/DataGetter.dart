@@ -3,13 +3,14 @@ import 'package:http/http.dart';
 import 'package:school_timetable/utils/SettingUtils.dart'; // Contains a client for making API calls
 
 class DataGetter{
+  static String baseUrl = "https://orariserver.azurewebsites.net";
 
   static Future<String> _getUrl(String endpoint, date) async {
     String year = await SettingUtils.getData("anno");
     String course = await SettingUtils.getData("corso");
     String year2 = await SettingUtils.getData("anno2");
     String txtcurr = await SettingUtils.getData("txtcurr");
-    String url = "https://orariserver.azurewebsites.net$endpoint?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr";
+    String url = "$baseUrl$endpoint?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr";
     return url;
   }
 
@@ -18,7 +19,7 @@ class DataGetter{
     String course = await SettingUtils.getData("corsoExtra");
     String year2 = await SettingUtils.getData("anno2Extra");
     String txtcurr = await SettingUtils.getData("txtcurrExtra");
-    String url = "https://orariserver.azurewebsites.net$endpoint?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr";
+    String url = "$baseUrl$endpoint?anno=$year&corso=$course&anno2=$year2&date=$date&txtcurr=$txtcurr";
     return url;
   }
 
@@ -40,7 +41,7 @@ class DataGetter{
   static Future getYears() async {
     var client = Client();
     Response response = await client.get(
-        Uri.parse("https://orariserver.azurewebsites.net/years")
+        Uri.parse("$baseUrl/years")
     );
     return jsonDecode(response.body);
   }
@@ -48,9 +49,9 @@ class DataGetter{
   static Future getCourses(var year) async {
     var client = Client();
     Response response = await client.get(
-        Uri.parse("https://orariserver.azurewebsites.net/courses?anno=$year")
+        Uri.parse("$baseUrl/courses?anno=$year")
     );
-    print("https://orariserver.azurewebsites.net/courses?anno=$year");
+    print("$baseUrl/courses?anno=$year");
     return jsonDecode(response.body);
   }
 
