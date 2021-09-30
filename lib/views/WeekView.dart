@@ -111,25 +111,23 @@ class _WeekViewState extends State<WeekView> {
           ),
           textAlign: TextAlign.center,
         ));
-      } else {
-        widgets.add(new LessonCard(
-          lesson["nome_insegnamento"],
-          lesson["docente"],
-          lesson["aula"],
-          lesson["ora_inizio"],
-          lesson["ora_fine"],
-          lesson["extra"],
-          now,
-          false,
-        ));
       }
+      widgets.add(new LessonCard(
+        lesson["nome_insegnamento"],
+        lesson["docente"],
+        lesson["aula"],
+        lesson["ora_inizio"],
+        lesson["ora_fine"],
+        lesson["extra"],
+        now,
+        false,
+      ));
     });
     return widgets;
   }
 
   @override
   Widget build(BuildContext context) {
-
     List<Widget> widgets = [];
     if (this.nDays != -1) {
       Map map = new Map();
